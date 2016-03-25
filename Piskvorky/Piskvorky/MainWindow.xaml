@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Piskvorky"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="414.417" Width="525">
     <Grid>
-        
+        <Label x:Name="label" Content="Piškvorky - Minimax" Height="47" Margin="120,22,120,0" VerticalAlignment="Top" FontSize="26.667" HorizontalAlignment="Center" FontWeight="Bold" Width="355" HorizontalContentAlignment="Center"/>
+        <Button x:Name="button" Content="Tic-Tac-Toe (3x3)" Height="53" Margin="160,100,160,0" VerticalAlignment="Top" FontSize="16" Click="button_Click"/>
+
     </Grid>
 </Window>

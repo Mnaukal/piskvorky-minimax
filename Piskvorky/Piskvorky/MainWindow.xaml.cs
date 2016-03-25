@@ -24,5 +24,12 @@ namespace Piskvorky
         {
             InitializeComponent();
         }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            // zobrazit nové okno (TicTacToe)
+            Window_TicTacToe ttt1 = new Window_TicTacToe();
+            ttt1.Show();
+        }
     }
 }
