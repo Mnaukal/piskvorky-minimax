@@ -25,11 +25,28 @@ namespace Piskvorky
             InitializeComponent();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void button_ttc1_Click(object sender, RoutedEventArgs e)
         {
             // zobrazit nové okno (TicTacToe)
             Window_TicTacToe ttt1 = new Window_TicTacToe();
             ttt1.Show();
+        }
+
+        private void button_ttc2_Click(object sender, RoutedEventArgs e)
+        {
+            // zobrazit nové okno (TicTacToe) + hloubka
+            Window_TicTacToe_hloubka ttt2 = new Window_TicTacToe_hloubka();
+            ttt2.Show();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MessageBoxResult vypnout = MessageBox.Show("Uzavření tohoto okna vypne všechny proníhající hry. Opravdu chcete skončit?", "Konec?", MessageBoxButton.YesNo, MessageBoxImage.Warning);      
+
+            if (vypnout == MessageBoxResult.Yes)
+                Application.Current.Shutdown(); 
+            else
+                e.Cancel = true;
         }
     }
 }

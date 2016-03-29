@@ -15,9 +15,9 @@ using System.Windows.Shapes;
 namespace Piskvorky
 {
     /// <summary>
-    /// Interaction logic for Window_TicTacToe.xaml
+    /// Interaction logic for Window_TicTacToe_hloubka.xaml
     /// </summary>
-    public partial class Window_TicTacToe : Window
+    public partial class Window_TicTacToe_hloubka : Window
     {
         const int VELIKOST = 3;
         private int[,] plocha = new int[VELIKOST, VELIKOST];
@@ -26,7 +26,7 @@ namespace Piskvorky
         private Tah vybranyTah;
         private bool konecHry = false;
 
-        public Window_TicTacToe()
+        public Window_TicTacToe_hloubka()
         {
             InitializeComponent();
             Start(NaTahu.hrac);
@@ -52,7 +52,7 @@ namespace Piskvorky
                     naTahu = NaTahu.pocitac;
 
                     //najdi tah pro počítač
-                    MiniMax(1);
+                    MiniMax(1, 1);
 
                     //umísti tah počítače
                     UmistitTah(vybranyTah.Radek, vybranyTah.Sloupec);
@@ -85,7 +85,7 @@ namespace Piskvorky
             if (zacinajici == NaTahu.pocitac)
             {
                 // najdi tah
-                MiniMax(1);
+                MiniMax(1, 1);
 
                 //umisti tah
                 UmistitTah(vybranyTah.Radek, vybranyTah.Sloupec);
@@ -183,7 +183,7 @@ namespace Piskvorky
         /// Minimax
         /// </summary>
         /// <param name="minMax">-1 => min; 1 => max</param>
-        private int MiniMax(int minMax)
+        private int MiniMax(int minMax, int hloubka)
         {
             int? hodnoceni = Ohodnoceni();
 
@@ -204,7 +204,7 @@ namespace Piskvorky
                             //naTahu = (NaTahu)(-(int)naTahu); // změnit hráče na tahu
 
                             //najít další tah
-                            tahy.Add(new Tah(i, j, MiniMax(-minMax))); // další MiniMax
+                            tahy.Add(new Tah(i, j, MiniMax(-minMax, hloubka + 1))); // další MiniMax
 
                             // smazat tah z plochy
                             plocha[i, j] = 0; // znovu uvolnit pole 
@@ -234,7 +234,7 @@ namespace Piskvorky
                 if (hodnoceni == null) // remíza
                     return 0;
                 else
-                    return (int)hodnoceni;
+                    return (int)hodnoceni - hloubka;
             }
         }
 
@@ -248,27 +248,6 @@ namespace Piskvorky
         private void button_start_pocitac_Click(object sender, RoutedEventArgs e)
         {
             Start(NaTahu.pocitac);
-        }
-    }
-
-    public class Tah
-    {
-        public int Radek, Sloupec;
-        public int Hodnota;
-
-        public Tah()
-        {}
-
-        public Tah(int radek, int sloupec, int hodnota)
-        {
-            Radek = radek;
-            Sloupec = sloupec;
-            Hodnota = hodnota;
-        }
-
-        public override string ToString()
-        {
-            return Radek + ", " + Sloupec + ": " + Hodnota;
         }
     }
 }
