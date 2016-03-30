@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="TicTacToe1.cs" />
     <Compile Include="Window-TicTacToe-hloubka.xaml.cs">
       <DependentUpon>Window-TicTacToe-hloubka.xaml</DependentUpon>
     </Compile>
