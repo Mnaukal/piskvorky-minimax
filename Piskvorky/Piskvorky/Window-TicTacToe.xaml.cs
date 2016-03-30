@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace Piskvorky
 {
@@ -26,10 +27,41 @@ namespace Piskvorky
         private Tah vybranyTah;
         private bool konecHry = false;
 
+        // pro spuštění MiniMaxu na pozadí -> UI se nezasekne
+        private readonly BackgroundWorker pozadi = new BackgroundWorker();
+
         public Window_TicTacToe()
         {
             InitializeComponent();
-            Start(NaTahu.hrac);
+
+            pozadi.DoWork += Pozadi_DoWork;
+            pozadi.RunWorkerCompleted += Pozadi_RunWorkerCompleted;
+
+            Start(NaTahu.hrac);           
+        }
+
+        // spustit minimax na pozadí
+        private void Pozadi_DoWork(object sender, DoWorkEventArgs e)
+        {
+            // zobrazit informaci o probíhajícím tahu počítače
+            this.Dispatcher.Invoke(new Action(() =>
+            {
+                progressBar_tahPocitace.Visibility = Visibility.Visible;
+                label_tahPocitace.Visibility = Visibility.Visible;
+            }));
+
+            MiniMax(1);
+        }
+
+        // spustí se po dokončení úkolu na pozadí -> umístí tah počítače a změní, kdo je na tahu
+        private void Pozadi_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            UmistitTah(vybranyTah.Radek, vybranyTah.Sloupec);
+
+            progressBar_tahPocitace.Visibility = Visibility.Hidden;
+            label_tahPocitace.Visibility = Visibility.Hidden;
+
+            naTahu = NaTahu.hrac;
         }
 
         private void button_policko_Click(object sender, RoutedEventArgs e)
@@ -52,18 +84,27 @@ namespace Piskvorky
                     naTahu = NaTahu.pocitac;
 
                     //najdi tah pro počítač
-                    MiniMax(1);
+                    // MiniMax(1);
 
                     //umísti tah počítače
-                    UmistitTah(vybranyTah.Radek, vybranyTah.Sloupec);
+                    // UmistitTah(vybranyTah.Radek, vybranyTah.Sloupec);
 
                     //změní, kdo je na tahu -> Hráč
-                    naTahu = NaTahu.hrac;
+                    // naTahu = NaTahu.hrac;
+
+                    //spustit MiniMax(1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
+                    pozadi.RunWorkerAsync();
+
+                    
                 }
                 else
                 {
                     MessageBox.Show("Tady není volné políčko! Hrajte jinam.");
                 }
+            }
+            else
+            {
+                MessageBox.Show("Teď nejsi na tahu.");
             }
         }
 
@@ -84,14 +125,17 @@ namespace Piskvorky
 
             if (zacinajici == NaTahu.pocitac)
             {
-                // najdi tah
-                MiniMax(1);
+                //najdi tah
+                // MiniMax(1);
 
                 //umisti tah
-                UmistitTah(vybranyTah.Radek, vybranyTah.Sloupec);
+                // UmistitTah(vybranyTah.Radek, vybranyTah.Sloupec);
 
                 //změní, kdo je na tahu -> Hráč
-                naTahu = NaTahu.hrac;
+                // naTahu = NaTahu.hrac;
+
+                //spustit MiniMax(1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
+                pozadi.RunWorkerAsync();
             }
         }
 
