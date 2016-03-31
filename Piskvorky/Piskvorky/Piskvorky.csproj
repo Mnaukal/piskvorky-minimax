@@ -55,6 +55,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Window-TicTacToe-hloubka,lokalni.xaml.cs">
+      <DependentUpon>Window-TicTacToe-hloubka,lokalni.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Window-TicTacToe-hloubka.xaml.cs">
       <DependentUpon>Window-TicTacToe-hloubka.xaml</DependentUpon>
     </Compile>
@@ -73,6 +76,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Window-TicTacToe-hloubka,lokalni.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Window-TicTacToe-hloubka.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

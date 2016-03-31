@@ -25,6 +25,16 @@ namespace Piskvorky
             InitializeComponent();
         }
 
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MessageBoxResult vypnout = MessageBox.Show("Uzavření tohoto okna vypne všechny proníhající hry. Opravdu chcete skončit?", "Konec?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (vypnout == MessageBoxResult.Yes)
+                Application.Current.Shutdown();
+            else
+                e.Cancel = true;
+        }
+
         private void button_ttc1_Click(object sender, RoutedEventArgs e)
         {
             // zobrazit nové okno (TicTacToe)
@@ -37,16 +47,13 @@ namespace Piskvorky
             // zobrazit nové okno (TicTacToe) + hloubka
             Window_TicTacToe_hloubka ttt2 = new Window_TicTacToe_hloubka();
             ttt2.Show();
-        }
+        }       
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void button_ttc3_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult vypnout = MessageBox.Show("Uzavření tohoto okna vypne všechny proníhající hry. Opravdu chcete skončit?", "Konec?", MessageBoxButton.YesNo, MessageBoxImage.Warning);      
-
-            if (vypnout == MessageBoxResult.Yes)
-                Application.Current.Shutdown(); 
-            else
-                e.Cancel = true;
+            // zobrazit nové okno (TicTacToe) + hloubka, lokální hodnocení
+            Window_TicTacToe_hloubka_lokalni ttt3 = new Window_TicTacToe_hloubka_lokalni();
+            ttt3.Show();
         }
     }
 }

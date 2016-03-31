@@ -12,7 +12,13 @@
         <Button x:Name="button_ttc2" Height="53" Margin="160,169,160,0" VerticalAlignment="Top" FontSize="16" Click="button_ttc2_Click">
             <StackPanel>
                 <TextBlock Text="Tic-Tac-Toe (3x3)" HorizontalAlignment="Center"/>
-                <TextBlock Text="+hloubka" HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic"/>
+                <TextBlock Text="+ hloubka" HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic"/>
+            </StackPanel>
+        </Button>
+        <Button x:Name="button_ttc3" Height="66" Margin="160,237,160,0" VerticalAlignment="Top" FontSize="16" Click="button_ttc3_Click">
+            <StackPanel>
+                <TextBlock Text="Tic-Tac-Toe (3x3)" HorizontalAlignment="Center"/>
+                <TextBlock HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic">+ hloubka<LineBreak/>+ "lokální" hodnocení</TextBlock>
             </StackPanel>
         </Button>
 
