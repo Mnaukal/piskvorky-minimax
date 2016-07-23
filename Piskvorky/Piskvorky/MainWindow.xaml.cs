@@ -55,5 +55,20 @@ namespace Piskvorky
             Window_TicTacToe_hloubka_lokalni ttt3 = new Window_TicTacToe_hloubka_lokalni();
             ttt3.Show();
         }
+
+        private void button_pis1_Click(object sender, RoutedEventArgs e)
+        {
+            int velikost;
+            if(int.TryParse(textBox_velikost1.Text, out velikost))
+            {
+                // zobrazit nové okno Piskvorky 1
+                Window_Piskvorky pis1 = new Window_Piskvorky(velikost);
+                pis1.Show();
+            }
+            else
+            {
+                MessageBox.Show("Velikost plochy musí být číslo");
+            }            
+        }
     }
 }

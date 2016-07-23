@@ -24,7 +24,7 @@
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="button_policko_0_0" Content="" Grid.Column="0" Grid.Row="0" Click="button_policko_Click" BorderBrush="#FF444444" FontSize="96" Background="White" />
+                <Button x:Name="button_policko_0_0" Content="" Grid.Column="0" Grid.Row="0" Click="button_policko_Click" Background="White" BorderBrush="#FF444444" FontSize="96"/>
                 <Button x:Name="button_policko_0_1" Content="" Grid.Column="0" Grid.Row="1" Click="button_policko_Click" Background="White" BorderBrush="#FF444444" FontSize="96" />
                 <Button x:Name="button_policko_0_2" Content="" Grid.Column="0" Grid.Row="2" Click="button_policko_Click" Background="White" BorderBrush="#FF444444" FontSize="96" />
 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Piskvorky"
         mc:Ignorable="d"
-        Title="MainWindow" Height="414.417" Width="525" Closing="Window_Closing">
+        Title="MainWindow" Height="503.417" Width="525" Closing="Window_Closing">
     <Grid>
         <Label x:Name="label" Content="Piškvorky - Minimax" Height="47" Margin="120,22,120,0" VerticalAlignment="Top" FontSize="26.667" HorizontalAlignment="Center" FontWeight="Bold" Width="355" HorizontalContentAlignment="Center"/>
         <Button x:Name="button_ttc1" Content="Tic-Tac-Toe (3x3)" Height="53" Margin="160,100,160,0" VerticalAlignment="Top" FontSize="16" Click="button_ttc1_Click"/>
@@ -21,6 +21,14 @@
                 <TextBlock HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic">+ hloubka<LineBreak/>+ "lokální" hodnocení</TextBlock>
             </StackPanel>
         </Button>
+        <Button x:Name="button_pis1" Height="66" Margin="160,344,160,0" VerticalAlignment="Top" FontSize="16" Click="button_pis1_Click">
+            <StackPanel>
+                <TextBlock Text="Piškvorky" HorizontalAlignment="Center"/>
+                <TextBlock HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic"><Run Text="+ hloubka"/><LineBreak/><Run Text="+ &quot;lokální&quot; hodnocení"/></TextBlock>
+            </StackPanel>
+        </Button>
+        <Label x:Name="label1" Content="Velikost plochy:" HorizontalAlignment="Left" Height="26" Margin="0,348,0,0" VerticalAlignment="Top" Width="93"/>
+        <TextBox x:Name="textBox_velikost1" HorizontalAlignment="Left" Height="22" Margin="93,352,0,0" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="4"/>
 
     </Grid>
 </Window>

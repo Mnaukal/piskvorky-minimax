@@ -149,14 +149,18 @@ namespace Piskvorky
             if (naTahu == NaTahu.hrac)
             {
                 plocha[radek, sloupec] = 1;
-                tlacitkoNaPozici.Content = "X";
-                tlacitkoNaPozici.Foreground = Brushes.Red;
+
+                Image i = new Image();
+                i.Source = new BitmapImage(new Uri("krizek.png", UriKind.Relative));
+                tlacitkoNaPozici.Content = i;
             }
             else if (naTahu == NaTahu.pocitac)
             {
                 plocha[radek, sloupec] = -1;
-                tlacitkoNaPozici.Content = "O";
-                tlacitkoNaPozici.Foreground = Brushes.Blue;
+
+                Image i = new Image();
+                i.Source = new BitmapImage(new Uri("kolecko.png", UriKind.Relative));
+                tlacitkoNaPozici.Content = i;
             }
             pocetVolnych--;
 
