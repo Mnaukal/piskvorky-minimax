@@ -26,8 +26,8 @@ namespace Piskvorky
         private NaTahu naTahu = NaTahu.hrac;
         private Tah vybranyTah;
         private bool konecHry = false;
-        private int MaxHloubka = 2;
-
+        private int MaxHloubka = 3;
+        private double vyherniOhodnoceni = Math.Pow(10, 3); // 5 v řadě
 
         private int[,] Smery = new int[,] { { 0, 1 }, { -1, 1 }, { -1, 0 }, { -1, -1 } }; // různé směry použité v hodnotící funkci: { posun v radku, posun ve sloupci }
 
@@ -200,11 +200,11 @@ namespace Piskvorky
             }
             pocetVolnych--;
 
-            if (Ohodnoceni(radek, sloupec) != 0) //konec hry
+            if (Ohodnoceni(radek, sloupec) >= vyherniOhodnoceni) //konec hry
             {
                 konecHry = true;
 
-                int? hodnoceni = Ohodnoceni(radek, sloupec);
+                double? hodnoceni = Ohodnoceni(radek, sloupec);
 
                 if (hodnoceni == null) // remíza
                 {
@@ -228,44 +228,65 @@ namespace Piskvorky
         /// <param name="radek">řádek posledného umístěného tahu</param>
         /// <param name="sloupec">sloupec posledného umístěného tahu</param>
         /// <returns>aktuální ohodnocení hracího pole</returns>
-        private int? Ohodnoceni(int radek, int sloupec)
+        private double? Ohodnoceni(int radek, int sloupec)
         {
+            double hodnoceni = 0;
+
             for (int i = 0; i < 4; i++) // vyzkoušíme 4 směry
             {
-                int symbol = 0;
-                int pocetVRade = 0;
-                for (int j = -2; j <= 2; j++) // dvě políčka před a dvě políčka za aktuální tah (tvorba trojic)
+                int symbol = plocha[radek, sloupec];
+                double pocetVRadeDopredu = 0;
+                double pocetVRadeZpet = 0;
+
+                for (int j = 0; j <= 5; j++) // až 5 polí "dopředu"
                 {
                     if ((radek + j * Smery[i, 0] < 0) || (radek + j * Smery[i, 0] >= VELIKOST) || (sloupec + j * Smery[i, 1] < 0) || (sloupec + j * Smery[i, 1] >= VELIKOST)) // index je mimo rozsah
-                        continue;
+                        break;
 
                     if (plocha[radek + j * Smery[i, 0], sloupec + j * Smery[i, 1]] == symbol) // symbol (tah hráče) na políčku o j políček daleko v daném směru je stejný jako předchozí symbol
                     {
                         // symbol je stejný -> zvýšit počet v řade
-                        pocetVRade++;
+                        pocetVRadeDopredu++;
                     }
                     else
                     {
-                        // symbol je jiný -> počet v řadě je 1
-                        symbol = plocha[radek + j * Smery[i, 0], sloupec + j * Smery[i, 1]];
-                        pocetVRade = 1;
+                        if (plocha[radek + j * Smery[i, 0], sloupec + j * Smery[i, 1]] == 0) // tah není na konci zablokován
+                        {
+                            pocetVRadeDopredu += 0.1;
+                        }
+                        break;
                     }
-
                 }
 
-                if (pocetVRade >= 3) // trojice
+                for (int j = 0; j >= -5; j--) // až 5 "zpět"
                 {
-                    if (symbol == -(int)naTahu) // hrac na tahu prohral
-                        return -10;
-                    else if (symbol == (int)naTahu) // hrac na tahu vyhral
-                        return 10;
+                    if ((radek + j * Smery[i, 0] < 0) || (radek + j * Smery[i, 0] >= VELIKOST) || (sloupec + j * Smery[i, 1] < 0) || (sloupec + j * Smery[i, 1] >= VELIKOST)) // index je mimo rozsah
+                        break;
 
+                    if (plocha[radek + j * Smery[i, 0], sloupec + j * Smery[i, 1]] == symbol) // symbol (tah hráče) na políčku o j políček daleko v daném směru je stejný jako předchozí symbol
+                    {
+                        // symbol je stejný -> zvýšit počet v řade
+                        pocetVRadeZpet++;
+                    }
+                    else
+                    {
+                        if (plocha[radek + j * Smery[i, 0], sloupec + j * Smery[i, 1]] == 0) // tah není na konci zablokován
+                        {
+                            pocetVRadeZpet += 0.1;
+                        }
+                        break;
+                    }
                 }
+
+                double pocetVRade = pocetVRadeDopredu + pocetVRadeZpet - 1;
+
+                hodnoceni += Math.Pow(10, pocetVRade);
             }
-            if (pocetVolnych == 0)
+
+            if (pocetVolnych == 0 && hodnoceni <= vyherniOhodnoceni)
                 return null; //remíza
 
-            return 0; // nedohráno
+            return hodnoceni;
         }
 
         /// <summary>
@@ -277,9 +298,9 @@ namespace Piskvorky
         /// <param name="sloupec">sloupec zkoušeného/posledního tahu</param>
         private int MiniMax(int minMax, int hloubka, int radek, int sloupec)
         {
-            int? hodnoceni = Ohodnoceni(radek, sloupec);
+            double? hodnoceni = Ohodnoceni(radek, sloupec);
 
-            if (hodnoceni == 0 && hloubka <= MaxHloubka)
+            if (hodnoceni <= vyherniOhodnoceni && hloubka <= MaxHloubka)
             {
                 List<Tah> tahy = new List<Tah>();
 
