@@ -13,8 +13,12 @@
                 <ColumnDefinition Width="230"/>
             </Grid.ColumnDefinitions>
 
-            <ScrollViewer x:Name="ScrollViewer_hraciPlocha" HorizontalScrollBarVisibility="Visible">
-                <Grid x:Name="grid_hraciPlocha" Margin="0" Width="500" Height="500"/>
+            <ScrollViewer x:Name="ScrollViewer_hraciPlocha" HorizontalScrollBarVisibility="Visible" PreviewMouseWheel="ScrollViewer_hraciPlocha_MouseWheel">
+                <Grid x:Name="grid_hraciPlocha" Margin="0" Width="500" Height="500">
+                    <Grid.LayoutTransform>
+                        <ScaleTransform x:Name="ScrollViewer_hraciPlocha_scale" CenterX="0" CenterY="0" ScaleX="1" ScaleY="1"/>
+                    </Grid.LayoutTransform>
+                </Grid>
             </ScrollViewer>
 
             <Button x:Name="button_start_hrac" Content="Nová hra - začíná hráč" Grid.Column="1" Height="50" Margin="25,26,25,0" VerticalAlignment="Top" Click="button_start_hrac_Click"/>

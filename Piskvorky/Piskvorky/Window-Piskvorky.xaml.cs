@@ -21,25 +21,27 @@ namespace Piskvorky
     public partial class Window_Piskvorky : Window
     {
         private int VELIKOST = 3;
+        private int MAXHLOUBKA = 3;
+        private int VYHRA = 5;
         private int[,] plocha;
         private int pocetVolnych;
         private NaTahu naTahu = NaTahu.hrac;
         private Tah vybranyTah;
         private bool konecHry = false;
-        private int MaxHloubka = 3;
-        private double vyherniOhodnoceni = Math.Pow(10, 3); // 5 v řadě
 
         private int[,] Smery = new int[,] { { 0, 1 }, { -1, 1 }, { -1, 0 }, { -1, -1 } }; // různé směry použité v hodnotící funkci: { posun v radku, posun ve sloupci }
 
         // pro spuštění MiniMaxu na pozadí -> UI se nezasekne
         private readonly BackgroundWorker pozadi = new BackgroundWorker();
 
-        public Window_Piskvorky(int velikost)
+        public Window_Piskvorky(int velikost, int hloubka, int vyhra)
         {
             InitializeComponent();
             
-            //nastavit velikost
+            //nastavit velikost, hloubku a výhru
             VELIKOST = velikost;
+            MAXHLOUBKA = hloubka;
+            VYHRA = vyhra;
 
             //vytvořit UI
             for (int i = 0; i < velikost; i++)
@@ -47,8 +49,8 @@ namespace Piskvorky
                 grid_hraciPlocha.RowDefinitions.Add(new RowDefinition());
                 grid_hraciPlocha.ColumnDefinitions.Add(new ColumnDefinition());
             }
-            grid_hraciPlocha.Width = velikost * 25;
-            grid_hraciPlocha.Height = velikost * 25;
+            grid_hraciPlocha.Width = velikost * 30;
+            grid_hraciPlocha.Height = velikost * 30;
 
             //vytvořit políčka hrací plochy (tlačítka)
             for (int i = 0; i < velikost; i++)
@@ -200,13 +202,13 @@ namespace Piskvorky
             }
             pocetVolnych--;
 
-            if (Ohodnoceni(radek, sloupec) >= vyherniOhodnoceni) //konec hry
+            if (Ohodnoceni(radek, sloupec).Dohrano == true) //konec hry
             {
                 konecHry = true;
 
-                double? hodnoceni = Ohodnoceni(radek, sloupec);
+                StavHry hodnoceni = Ohodnoceni(radek, sloupec);
 
-                if (hodnoceni == null) // remíza
+                if (hodnoceni.Ohodnoceni == 0) // remíza
                 {
                     label_ohodnoceni.Content = "Remíza!";
                 }
@@ -228,17 +230,17 @@ namespace Piskvorky
         /// <param name="radek">řádek posledného umístěného tahu</param>
         /// <param name="sloupec">sloupec posledného umístěného tahu</param>
         /// <returns>aktuální ohodnocení hracího pole</returns>
-        private double? Ohodnoceni(int radek, int sloupec)
+        private StavHry Ohodnoceni(int radek, int sloupec)
         {
-            double hodnoceni = 0;
+            int hodnoceni = 0;
 
             for (int i = 0; i < 4; i++) // vyzkoušíme 4 směry
             {
                 int symbol = plocha[radek, sloupec];
-                double pocetVRadeDopredu = 0;
-                double pocetVRadeZpet = 0;
+                int pocetVRadeDopredu = 0;
+                int pocetVRadeZpet = 0;
 
-                for (int j = 0; j <= 5; j++) // až 5 polí "dopředu"
+                for (int j = 0; j <= VYHRA; j++) // až počet výherních symbolů v řadě (5) polí "dopředu" 
                 {
                     if ((radek + j * Smery[i, 0] < 0) || (radek + j * Smery[i, 0] >= VELIKOST) || (sloupec + j * Smery[i, 1] < 0) || (sloupec + j * Smery[i, 1] >= VELIKOST)) // index je mimo rozsah
                         break;
@@ -252,13 +254,13 @@ namespace Piskvorky
                     {
                         if (plocha[radek + j * Smery[i, 0], sloupec + j * Smery[i, 1]] == 0) // tah není na konci zablokován
                         {
-                            pocetVRadeDopredu += 0.1;
+                            //pocetVRadeDopredu += 0.1;
                         }
                         break;
                     }
                 }
 
-                for (int j = 0; j >= -5; j--) // až 5 "zpět"
+                for (int j = 0; j >= -VYHRA; j--) // až počet výherních symbolů v řadě (5) polí "zpět"
                 {
                     if ((radek + j * Smery[i, 0] < 0) || (radek + j * Smery[i, 0] >= VELIKOST) || (sloupec + j * Smery[i, 1] < 0) || (sloupec + j * Smery[i, 1] >= VELIKOST)) // index je mimo rozsah
                         break;
@@ -272,21 +274,28 @@ namespace Piskvorky
                     {
                         if (plocha[radek + j * Smery[i, 0], sloupec + j * Smery[i, 1]] == 0) // tah není na konci zablokován
                         {
-                            pocetVRadeZpet += 0.1;
+                            //pocetVRadeZpet += 0.1;
                         }
                         break;
                     }
                 }
 
-                double pocetVRade = pocetVRadeDopredu + pocetVRadeZpet - 1;
+                int pocetVRade = pocetVRadeDopredu + pocetVRadeZpet - 1;
+                hodnoceni += (int)Math.Pow(10, pocetVRade);
 
-                hodnoceni += Math.Pow(10, pocetVRade);
+                if (pocetVRade >= VYHRA) // někdo má 5 v řadě
+                {
+                    if (symbol == -(int)naTahu) // hrac na tahu prohral
+                        return new StavHry(true, -100000);
+                    else if (symbol == (int)naTahu) // hrac na tahu vyhral
+                        return new StavHry(true, 100000);
+                }
             }
 
-            if (pocetVolnych == 0 && hodnoceni <= vyherniOhodnoceni)
-                return null; //remíza
+            if (pocetVolnych == 0)
+                return new StavHry(true, 0); //remíza
 
-            return hodnoceni;
+            return new StavHry(false, hodnoceni); // nedohráno
         }
 
         /// <summary>
@@ -298,9 +307,9 @@ namespace Piskvorky
         /// <param name="sloupec">sloupec zkoušeného/posledního tahu</param>
         private int MiniMax(int minMax, int hloubka, int radek, int sloupec)
         {
-            double? hodnoceni = Ohodnoceni(radek, sloupec);
+            StavHry hodnoceni = Ohodnoceni(radek, sloupec);
 
-            if (hodnoceni <= vyherniOhodnoceni && hloubka <= MaxHloubka)
+            if (hodnoceni.Dohrano == false && hloubka <= MAXHLOUBKA) // nedohráno a nepřekročena hloubka
             {
                 List<Tah> tahy = new List<Tah>();
 
@@ -334,20 +343,25 @@ namespace Piskvorky
                 int maximum = int.MinValue;
                 for (int i = 0; i < tahy.Count; i++)
                 {
+                    if (hloubka == 1)
+                        Console.WriteLine(tahy[i].Radek + ", " + tahy[i].Sloupec + ": " + tahy[i].Hodnota);
+
                     if (tahy[i].Hodnota * minMax > maximum) // * minMax (+1/-1) mění hledání minima a maxima -> po vynásobení je hodnocení vždy kladné
                     {
                         maximum = tahy[i].Hodnota * minMax; // nové maximum
                         vybranyTah = tahy[i];
                     }
                 }
+                if (hloubka == 1)
+                    Console.WriteLine("---------------");
                 return maximum * minMax;
             }
-            else
+            else // dohráno nebo překročena hloubka
             {
-                if (hodnoceni == null) // remíza
-                    return 0;
+                if (hodnoceni.Ohodnoceni == 0) // remíza
+                    return hodnoceni.Ohodnoceni;
                 else
-                    return (int)hodnoceni - hloubka;
+                    return hodnoceni.Ohodnoceni + hloubka * minMax;
             }
         }
 
@@ -367,6 +381,19 @@ namespace Piskvorky
         {
             ScrollViewer_hraciPlocha.ScrollToVerticalOffset(ScrollViewer_hraciPlocha.ScrollableHeight / 2);
             ScrollViewer_hraciPlocha.ScrollToHorizontalOffset(ScrollViewer_hraciPlocha.ScrollableWidth / 2);
+        }
+
+        private void ScrollViewer_hraciPlocha_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer_hraciPlocha_scale.ScaleX += e.Delta > 0 ? 0.1 : -0.1;
+            ScrollViewer_hraciPlocha_scale.ScaleY += e.Delta > 0 ? 0.1 : -0.1;
+
+            if (ScrollViewer_hraciPlocha_scale.ScaleX < 0.1)
+                ScrollViewer_hraciPlocha_scale.ScaleX = 0.1;
+            if (ScrollViewer_hraciPlocha_scale.ScaleY < 0.1)
+                ScrollViewer_hraciPlocha_scale.ScaleY = 0.1;
+
+            e.Handled = true;
         }
     }
 }

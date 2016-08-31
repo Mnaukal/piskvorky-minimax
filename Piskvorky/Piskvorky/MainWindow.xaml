@@ -28,7 +28,12 @@
             </StackPanel>
         </Button>
         <Label x:Name="label1" Content="Velikost plochy:" HorizontalAlignment="Left" Height="26" Margin="0,348,0,0" VerticalAlignment="Top" Width="93"/>
-        <TextBox x:Name="textBox_velikost1" HorizontalAlignment="Left" Height="22" Margin="93,352,0,0" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="4"/>
+        <TextBox x:Name="textBox_velikost1" HorizontalAlignment="Left" Height="22" Margin="93,352,0,0" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="4" GotFocus="textBox_GotFocus"/>
+        <Label x:Name="label2" Content="Hloubka:" HorizontalAlignment="Left" Height="26" Margin="0,378,0,0" VerticalAlignment="Top" Width="93"/>
+        <TextBox x:Name="textBox_hloubka1" HorizontalAlignment="Left" Height="22" Margin="93,382,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="2" GotFocus="textBox_GotFocus"/>
+        <Label x:Name="label3" Content="Počet na výhru:" HorizontalAlignment="Left" Height="26" Margin="0,408,0,0" VerticalAlignment="Top" Width="93"/>
+        <TextBox x:Name="textBox_vyhra1" HorizontalAlignment="Left" Height="22" Margin="93,412,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="1" GotFocus="textBox_GotFocus"/>
+
 
     </Grid>
 </Window>

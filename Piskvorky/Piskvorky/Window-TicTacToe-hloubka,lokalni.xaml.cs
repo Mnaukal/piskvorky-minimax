@@ -126,15 +126,6 @@ namespace Piskvorky
 
             if (zacinajici == NaTahu.pocitac)
             {
-                //najdi tah pro počítač
-                // MiniMax(1, 1);
-
-                //umísti tah počítače
-                // UmistitTah(vybranyTah.Radek, vybranyTah.Sloupec);
-
-                //změní, kdo je na tahu -> Hráč
-                // naTahu = NaTahu.hrac;
-
                 //spustit MiniMax(1, 1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
                 pozadi.RunWorkerAsync(new Tah(0, 0, 0)); // první tah do levého horního rohu (na základě předchozích pozorování)
             }
@@ -164,13 +155,13 @@ namespace Piskvorky
             }
             pocetVolnych--;
 
-            if (Ohodnoceni(radek, sloupec) != 0) //konec hry
+            if (Ohodnoceni(radek, sloupec).Dohrano == true) //konec hry
             {
                 konecHry = true;
 
-                int? hodnoceni = Ohodnoceni(radek, sloupec);
+                StavHry hodnoceni = Ohodnoceni(radek, sloupec);
 
-                if (hodnoceni == null) // remíza
+                if (hodnoceni.Ohodnoceni == 0) // remíza
                 {
                     label_ohodnoceni.Content = "Remíza!";
                 }
@@ -192,7 +183,7 @@ namespace Piskvorky
         /// <param name="radek">řádek posledného umístěného tahu</param>
         /// <param name="sloupec">sloupec posledného umístěného tahu</param>
         /// <returns>aktuální ohodnocení hracího pole</returns>
-        private int? Ohodnoceni(int radek, int sloupec)
+        private StavHry Ohodnoceni(int radek, int sloupec)
         {
             for (int i = 0; i < 4; i++) // vyzkoušíme 4 směry
             {
@@ -220,16 +211,16 @@ namespace Piskvorky
                 if (pocetVRade >= 3) // trojice
                 {
                     if (symbol == -(int)naTahu) // hrac na tahu prohral
-                        return -10;
+                        return new StavHry(true, -10);
                     else if (symbol == (int)naTahu) // hrac na tahu vyhral
-                        return 10;
+                        return new StavHry(true, 10);
                     
                 }
             }
             if (pocetVolnych == 0)
-                return null; //remíza
+                return new StavHry(true, 0); //remíza
 
-            return 0; // nedohráno
+            return new StavHry(false); // nedohráno
         }
 
         /// <summary>
@@ -241,9 +232,9 @@ namespace Piskvorky
         /// <param name="sloupec">sloupec zkoušeného/posledního tahu</param>
         private int MiniMax(int minMax, int hloubka, int radek, int sloupec)
         {
-            int? hodnoceni = Ohodnoceni(radek, sloupec);
+            StavHry hodnoceni = Ohodnoceni(radek, sloupec);
 
-            if (hodnoceni == 0)
+            if (hodnoceni.Dohrano == false) // nedohráno
             {
                 List<Tah> tahy = new List<Tah>();
 
@@ -277,20 +268,26 @@ namespace Piskvorky
                 int maximum = int.MinValue;
                 for (int i = 0; i < tahy.Count; i++)
                 {
+                    if (hloubka == 1)
+                        Console.WriteLine(tahy[i].Radek + ", " + tahy[i].Sloupec + ": " + tahy[i].Hodnota);
+
+
                     if (tahy[i].Hodnota * minMax > maximum) // * minMax (+1/-1) mění hledání minima a maxima -> po vynásobení je hodnocení vždy kladné
                     {
                         maximum = tahy[i].Hodnota * minMax; // nové maximum
                         vybranyTah = tahy[i];
                     }
                 }
+                if (hloubka == 1)
+                    Console.WriteLine("---------------");
                 return maximum * minMax;
             }
             else
             {
-                if (hodnoceni == null) // remíza
+                if (hodnoceni.Ohodnoceni == 0) // remíza
                     return 0;
                 else
-                    return (int)hodnoceni - hloubka;
+                    return (int)hodnoceni.Ohodnoceni + hloubka * minMax;
             }
         }
 
