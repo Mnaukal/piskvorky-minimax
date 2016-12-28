@@ -278,7 +278,7 @@ namespace Piskvorky
                 }
                 if (hloubka == 1)
                     Console.WriteLine("---------------");
-                return maximum * minMax;
+                return (maximum + hloubka) * minMax;
             }
             else
             {

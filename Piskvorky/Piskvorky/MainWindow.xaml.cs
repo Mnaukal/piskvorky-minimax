@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,12 +27,15 @@ namespace Piskvorky
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            MessageBoxResult vypnout = MessageBox.Show("Uzavření tohoto okna vypne všechny proníhající hry. Opravdu chcete skončit?", "Konec?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (Application.Current.Windows.Cast<Window>().Where(x => x.ToString().Contains("Piskvorky")).Count() > 1)
+            {
+                MessageBoxResult vypnout = MessageBox.Show("Uzavření tohoto okna vypne všechny proníhající hry. Opravdu chcete skončit?", "Konec?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
-            if (vypnout == MessageBoxResult.Yes)
-                Application.Current.Shutdown();
-            else
-                e.Cancel = true;
+                if (vypnout == MessageBoxResult.Yes)
+                    Application.Current.Shutdown();
+                else
+                    e.Cancel = true;
+            }
         }
 
         private void button_ttc1_Click(object sender, RoutedEventArgs e)
@@ -64,13 +67,30 @@ namespace Piskvorky
                 int.TryParse(textBox_vyhra1.Text, out vyhra))
             {
                 // zobrazit nové okno Piskvorky 1
-                Window_Piskvorky_lokalni pis1 = new Window_Piskvorky_lokalni(velikost, hloubka, vyhra);
+                Window_Piskvorky pis1 = new Window_Piskvorky(velikost, hloubka, vyhra);
                 pis1.Show();
             }
             else
             {
                 MessageBox.Show("Velikost plochy, hloubka a počet na výhru musí být čísla");
             }            
+        }
+
+        private void button_pis2_Click(object sender, RoutedEventArgs e)
+        {
+            int velikost, hloubka, vyhra;
+            if (int.TryParse(textBox_velikost2.Text, out velikost) &&
+                int.TryParse(textBox_hloubka2.Text, out hloubka) &&
+                int.TryParse(textBox_vyhra2.Text, out vyhra))
+            {
+                // zobrazit nové okno (Piskvorky) + lokální
+                Window_Piskvorky_lokalni pis2 = new Window_Piskvorky_lokalni(velikost, hloubka, vyhra);
+                pis2.Show();
+            }
+            else
+            {
+                MessageBox.Show("Velikost plochy, hloubka a počet na výhru musí být čísla");
+            }
         }
 
         private void textBox_GotFocus(object sender, RoutedEventArgs e)

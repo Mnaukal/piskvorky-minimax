@@ -278,7 +278,7 @@ namespace Piskvorky
                         vybranyTah = tahy[i];
                     }
                 }
-                return maximum * minMax;
+                return (maximum + hloubka) * minMax;
             }
             else
             {

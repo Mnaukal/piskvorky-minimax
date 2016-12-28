@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Piskvorky"
         mc:Ignorable="d"
-        Title="MainWindow" Height="503.417" Width="525" Closing="Window_Closing">
+        Title="MainWindow" Height="615.417" Width="525" Closing="Window_Closing">
     <Grid>
         <Label x:Name="label" Content="Piškvorky - Minimax" Height="47" Margin="120,22,120,0" VerticalAlignment="Top" FontSize="26.667" HorizontalAlignment="Center" FontWeight="Bold" Width="355" HorizontalContentAlignment="Center"/>
         <Button x:Name="button_ttc1" Content="Tic-Tac-Toe (3x3)" Height="53" Margin="160,100,160,0" VerticalAlignment="Top" FontSize="16" Click="button_ttc1_Click"/>
@@ -24,15 +24,27 @@
         <Button x:Name="button_pis1" Height="66" Margin="160,344,160,0" VerticalAlignment="Top" FontSize="16" Click="button_pis1_Click">
             <StackPanel>
                 <TextBlock Text="Piškvorky" HorizontalAlignment="Center"/>
+                <TextBlock HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic"><Run Text="+ hloubka"/></TextBlock>
+            </StackPanel>
+        </Button>
+        <Label x:Name="label_velikost1" Content="Velikost plochy:" HorizontalAlignment="Left" Height="26" Margin="0,332,0,0" VerticalAlignment="Top" Width="93"/>
+        <TextBox x:Name="textBox_velikost1" HorizontalAlignment="Left" Height="22" Margin="93,336,0,0" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="4" GotFocus="textBox_GotFocus"/>
+        <Label x:Name="label_hloubka1" Content="Hloubka:" HorizontalAlignment="Left" Height="26" Margin="0,362,0,0" VerticalAlignment="Top" Width="93"/>
+        <TextBox x:Name="textBox_hloubka1" HorizontalAlignment="Left" Height="22" Margin="93,366,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="2" GotFocus="textBox_GotFocus"/>
+        <Label x:Name="label_vyhra1" Content="Počet na výhru:" HorizontalAlignment="Left" Height="26" Margin="0,392,0,0" VerticalAlignment="Top" Width="93"/>
+        <TextBox x:Name="textBox_vyhra1" HorizontalAlignment="Left" Height="22" Margin="93,396,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="1" GotFocus="textBox_GotFocus"/>
+        <Button x:Name="button_pis2" Height="66" Margin="160,465,160,0" VerticalAlignment="Top" FontSize="16" Click="button_pis2_Click">
+            <StackPanel>
+                <TextBlock Text="Piškvorky" HorizontalAlignment="Center"/>
                 <TextBlock HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic"><Run Text="+ hloubka"/><LineBreak/><Run Text="+ &quot;lokální&quot; hodnocení"/></TextBlock>
             </StackPanel>
         </Button>
-        <Label x:Name="label1" Content="Velikost plochy:" HorizontalAlignment="Left" Height="26" Margin="0,348,0,0" VerticalAlignment="Top" Width="93"/>
-        <TextBox x:Name="textBox_velikost1" HorizontalAlignment="Left" Height="22" Margin="93,352,0,0" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="4" GotFocus="textBox_GotFocus"/>
-        <Label x:Name="label2" Content="Hloubka:" HorizontalAlignment="Left" Height="26" Margin="0,378,0,0" VerticalAlignment="Top" Width="93"/>
-        <TextBox x:Name="textBox_hloubka1" HorizontalAlignment="Left" Height="22" Margin="93,382,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="2" GotFocus="textBox_GotFocus"/>
-        <Label x:Name="label3" Content="Počet na výhru:" HorizontalAlignment="Left" Height="26" Margin="0,408,0,0" VerticalAlignment="Top" Width="93"/>
-        <TextBox x:Name="textBox_vyhra1" HorizontalAlignment="Left" Height="22" Margin="93,412,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="1" GotFocus="textBox_GotFocus"/>
+        <Label x:Name="label_velikost2" Content="Velikost plochy:" HorizontalAlignment="Left" Height="26" Margin="0,453,0,0" VerticalAlignment="Top" Width="93"/>
+        <TextBox x:Name="textBox_velikost2" HorizontalAlignment="Left" Height="22" Margin="93,457,0,0" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="4" GotFocus="textBox_GotFocus"/>
+        <Label x:Name="label_hloubka2" Content="Hloubka:" HorizontalAlignment="Left" Height="26" Margin="0,483,0,0" VerticalAlignment="Top" Width="93"/>
+        <TextBox x:Name="textBox_hloubka2" HorizontalAlignment="Left" Height="22" Margin="93,487,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="2" GotFocus="textBox_GotFocus"/>
+        <Label x:Name="label_vyhra2" Content="Počet na výhru:" HorizontalAlignment="Left" Height="26" Margin="0,513,0,0" VerticalAlignment="Top" Width="93"/>
+        <TextBox x:Name="textBox_vyhra2" HorizontalAlignment="Left" Height="22" Margin="93,517,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="1" GotFocus="textBox_GotFocus"/>
 
 
     </Grid>
