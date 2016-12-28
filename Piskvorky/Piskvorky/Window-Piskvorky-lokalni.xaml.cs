@@ -18,7 +18,7 @@ namespace Piskvorky
     /// <summary>
     /// Interaction logic for Window_Piskvorky.xaml
     /// </summary>
-    public partial class Window_Piskvorky : Window
+    public partial class Window_Piskvorky_lokalni : Window
     {
         private int VELIKOST = 3;
         private int MAXHLOUBKA = 3;
@@ -34,7 +34,7 @@ namespace Piskvorky
         // pro spuštění MiniMaxu na pozadí -> UI se nezasekne
         private readonly BackgroundWorker pozadi = new BackgroundWorker();
 
-        public Window_Piskvorky(int velikost, int hloubka, int vyhra)
+        public Window_Piskvorky_lokalni(int velikost, int hloubka, int vyhra)
         {
             InitializeComponent();
             
@@ -115,15 +115,12 @@ namespace Piskvorky
 
                 if (plocha[radek, sloupec] == 0) //políčko je prázdné
                 {
-
-                    
                     // umísti hráčův tah
                     UmistitTah(radek, sloupec);
 
                     //změní, kdo je na tahu
                     naTahu = NaTahu.pocitac;
 
-                    
                     //najdi tah pro počítač
                     // MiniMax(1, 1);
 

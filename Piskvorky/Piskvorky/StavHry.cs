@@ -22,4 +22,25 @@ namespace Piskvorky
             Dohrano = dohrano;
         }
     }
+
+    public class Tah
+    {
+        public int Radek, Sloupec;
+        public int Hodnota;
+
+        public Tah()
+        { }
+
+        public Tah(int radek, int sloupec, int hodnota)
+        {
+            Radek = radek;
+            Sloupec = sloupec;
+            Hodnota = hodnota;
+        }
+
+        public override string ToString()
+        {
+            return Radek + ", " + Sloupec + ": " + Hodnota;
+        }
+    }
 }

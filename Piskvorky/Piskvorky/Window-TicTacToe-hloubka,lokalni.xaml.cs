@@ -96,7 +96,6 @@ namespace Piskvorky
 
                     //spustit MiniMax(1, 1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
                     pozadi.RunWorkerAsync(new Tah(radek, sloupec, 0)); // poslední hráčův tah
-
                 }
                 else
                 {
@@ -270,7 +269,6 @@ namespace Piskvorky
                 {
                     if (hloubka == 1)
                         Console.WriteLine(tahy[i].Radek + ", " + tahy[i].Sloupec + ": " + tahy[i].Hodnota);
-
 
                     if (tahy[i].Hodnota * minMax > maximum) // * minMax (+1/-1) mění hledání minima a maxima -> po vynásobení je hodnocení vždy kladné
                     {

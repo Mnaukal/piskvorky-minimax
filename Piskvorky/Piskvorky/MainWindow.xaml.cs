@@ -64,7 +64,7 @@ namespace Piskvorky
                 int.TryParse(textBox_vyhra1.Text, out vyhra))
             {
                 // zobrazit nové okno Piskvorky 1
-                Window_Piskvorky pis1 = new Window_Piskvorky(velikost, hloubka, vyhra);
+                Window_Piskvorky_lokalni pis1 = new Window_Piskvorky_lokalni(velikost, hloubka, vyhra);
                 pis1.Show();
             }
             else

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace Piskvorky
 {
@@ -94,7 +94,6 @@ namespace Piskvorky
 
                     //spustit MiniMax(1, 1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
                     pozadi.RunWorkerAsync();
-
                 }
                 else
                 {
@@ -162,13 +161,13 @@ namespace Piskvorky
             }
             pocetVolnych--;
 
-            if (Ohodnoceni() != 0) //konec hry
+            if (Ohodnoceni().Dohrano == true) //konec hry
             {
                 konecHry = true;
 
-                int? hodnoceni = Ohodnoceni();
+                StavHry hodnoceni = Ohodnoceni();
 
-                if (hodnoceni == null) // remíza
+                if (hodnoceni.Ohodnoceni == 0) // remíza
                 {
                     label_ohodnoceni.Content = "Remíza!";
                 }
@@ -184,57 +183,62 @@ namespace Piskvorky
             }
         }
 
-        private int? Ohodnoceni()
+        /// <summary>
+        /// Ohodnocení hracího pole
+        /// </summary>
+        /// <returns>aktuální ohodnocení hracího pole</returns>
+        private StavHry Ohodnoceni()
         {
             if (plocha[0, 0] + plocha[0, 1] + plocha[0, 2] == 3 * (int)naTahu) //hrac na tahu vyhral
-                return 10;
+                return new StavHry(true, 10);
             if (plocha[1, 0] + plocha[1, 1] + plocha[1, 2] == 3 * (int)naTahu)
-                return 10;
+                return new StavHry(true, 10);
             if (plocha[2, 0] + plocha[2, 1] + plocha[2, 2] == 3 * (int)naTahu)
-                return 10;
+                return new StavHry(true, 10);
             if (plocha[0, 0] + plocha[1, 0] + plocha[2, 0] == 3 * (int)naTahu)
-                return 10;
+                return new StavHry(true, 10);
             if (plocha[0, 1] + plocha[1, 1] + plocha[2, 1] == 3 * (int)naTahu)
-                return 10;
+                return new StavHry(true, 10);
             if (plocha[0, 2] + plocha[1, 2] + plocha[2, 2] == 3 * (int)naTahu)
-                return 10;
+                return new StavHry(true, 10);
             if (plocha[0, 0] + plocha[1, 1] + plocha[2, 2] == 3 * (int)naTahu)
-                return 10;
+                return new StavHry(true, 10);
             if (plocha[0, 2] + plocha[1, 1] + plocha[2, 0] == 3 * (int)naTahu)
-                return 10;
+                return new StavHry(true, 10);
 
             if (plocha[0, 0] + plocha[0, 1] + plocha[0, 2] == -3 * (int)naTahu) //hrac na tahu prohral
-                return -10;
+                return new StavHry(true, -10);
             if (plocha[1, 0] + plocha[1, 1] + plocha[1, 2] == -3 * (int)naTahu)
-                return -10;
+                return new StavHry(true, -10);
             if (plocha[2, 0] + plocha[2, 1] + plocha[2, 2] == -3 * (int)naTahu)
-                return -10;
+                return new StavHry(true, -10);
             if (plocha[0, 0] + plocha[1, 0] + plocha[2, 0] == -3 * (int)naTahu)
-                return -10;
+                return new StavHry(true, -10);
             if (plocha[0, 1] + plocha[1, 1] + plocha[2, 1] == -3 * (int)naTahu)
-                return -10;
+                return new StavHry(true, -10);
             if (plocha[0, 2] + plocha[1, 2] + plocha[2, 2] == -3 * (int)naTahu)
-                return -10;
+                return new StavHry(true, -10);
             if (plocha[0, 0] + plocha[1, 1] + plocha[2, 2] == -3 * (int)naTahu)
-                return -10;
+                return new StavHry(true, -10);
             if (plocha[0, 2] + plocha[1, 1] + plocha[2, 0] == -3 * (int)naTahu)
-                return -10;
+                return new StavHry(true, -10);
 
             if (pocetVolnych == 0)
-                return null; //remíza
+                return new StavHry(true, 0); //remíza
 
-            return 0; //nedohráno
+            return new StavHry(false); // nedohráno
         }
 
         /// <summary>
         /// Minimax
         /// </summary>
         /// <param name="minMax">-1 => min; 1 => max</param>
+        /// <param name="hloubka">hloubka rekurze</param>
         private int MiniMax(int minMax, int hloubka)
         {
-            int? hodnoceni = Ohodnoceni();
+            StavHry hodnoceni = Ohodnoceni();
 
-            if (hodnoceni == 0)
+            if (hodnoceni.Dohrano == false) // nedohráno
             {
                 List<Tah> tahy = new List<Tah>();
 
@@ -278,10 +282,10 @@ namespace Piskvorky
             }
             else
             {
-                if (hodnoceni == null) // remíza
+                if (hodnoceni.Ohodnoceni == 0) // remíza
                     return 0;
                 else
-                    return (int)hodnoceni - hloubka;
+                    return (int)hodnoceni.Ohodnoceni + hloubka * minMax;
             }
         }
 
