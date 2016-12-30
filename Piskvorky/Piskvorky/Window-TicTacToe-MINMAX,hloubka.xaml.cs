@@ -126,6 +126,8 @@ namespace Piskvorky
 
         private void Start(NaTahu zacinajici)
         {
+            if (pozadi.IsBusy)
+                pozadi.CancelAsync(); // přerušení předchozího výpočtu
             // vyčištění hrací plochy
             plocha = new int[VELIKOST, VELIKOST];
             pocetVolnych = VELIKOST * VELIKOST;

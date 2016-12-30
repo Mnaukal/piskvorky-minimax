@@ -183,11 +183,13 @@ namespace Piskvorky
 
         private void Start(NaTahu zacinajici)
         {
+            if (pozadi.IsBusy)
+                pozadi.CancelAsync(); // přerušení předchozího výpočtu
             // vyčištění hrací plochy
             plocha = new int[VELIKOST, VELIKOST];
             pocetVolnych = VELIKOST * VELIKOST;
-            dolni = pravy = Math.Min(VELIKOST / 2 + 2, VELIKOST);
-            levy = horni = Math.Max(VELIKOST / 2 - 2, 0);
+            dolni = pravy = 0;
+            levy = horni = VELIKOST;
             zahraneTahy = "";
             konecHry = false;
             label_ohodnoceni.Content = "";
@@ -203,8 +205,15 @@ namespace Piskvorky
             {
                 if (checkBox_vypnoutPocitac.IsChecked == false) // není zapnut testovací mód
                 {
-                    //spustit MiniMax(1, 1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
-                    pozadi.RunWorkerAsync(new Tah(0, 0, 0)); // první tah do levého horního rohu (na základě předchozích pozorování)
+                    UmistitTah(VELIKOST / 2, VELIKOST / 2); // první tah na střed
+
+                    progressBar_tahPocitace.Visibility = Visibility.Hidden;
+                    label_tahPocitace.Visibility = Visibility.Hidden;
+
+                    mereniCasu.Stop();
+                    label_cas.Content = mereniCasu.ElapsedMilliseconds;
+
+                    naTahu = NaTahu.hrac;
                 }
             }
         }
@@ -428,6 +437,9 @@ namespace Piskvorky
                             //najít další tah
                             int hodnotaTahu = Min(hloubka + 1, alfa, beta); // vnitřní Min
                             alfa = Math.Max(alfa, hodnotaTahu);
+
+                            //if (hloubka == 1)
+                            //    Console.WriteLine(new Tah(i, j, hodnotaTahu));
 
                             if (hodnotaTahu > maximum) // nový nejlepší tah
                             {

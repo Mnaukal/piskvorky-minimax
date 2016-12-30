@@ -170,6 +170,8 @@ namespace Piskvorky
 
         private void Start(NaTahu zacinajici)
         {
+            if (pozadi.IsBusy)
+                pozadi.CancelAsync(); // přerušení předchozího výpočtu
             // vyčištění hrací plochy
             plocha = new int[VELIKOST, VELIKOST];
             pocetVolnych = VELIKOST * VELIKOST;
@@ -186,7 +188,7 @@ namespace Piskvorky
             if (zacinajici == NaTahu.pocitac)
             {
                 //spustit MiniMax(1, 1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
-                pozadi.RunWorkerAsync(new Tah(0, 0, 0)); // první tah do levého horního rohu (na základě předchozích pozorování)
+                pozadi.RunWorkerAsync();
             }
         }
 
