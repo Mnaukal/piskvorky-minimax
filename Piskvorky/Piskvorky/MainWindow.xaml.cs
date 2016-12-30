@@ -125,8 +125,25 @@ namespace Piskvorky
                 int.TryParse(textBox_vyhra1.Text, out vyhra))
             {
                 // zobrazit nové okno Piskvorky 4
-                Window_Piskvorky_AlfaBeta pis3 = new Window_Piskvorky_AlfaBeta(velikost, hloubka, vyhra);
-                pis3.Show();
+                Window_Piskvorky_AlfaBeta pis4 = new Window_Piskvorky_AlfaBeta(velikost, hloubka, vyhra);
+                pis4.Show();
+            }
+            else
+            {
+                MessageBox.Show("Velikost plochy, hloubka a počet na výhru musí být čísla");
+            }
+        }
+
+        private void button_pis5_Click(object sender, RoutedEventArgs e)
+        {
+            int velikost, hloubka, vyhra;
+            if (int.TryParse(textBox_velikost1.Text, out velikost) &&
+                int.TryParse(textBox_hloubka1.Text, out hloubka) &&
+                int.TryParse(textBox_vyhra1.Text, out vyhra))
+            {
+                // zobrazit nové okno Piskvorky 4
+                Window_Piskvorky_AlfaBeta_optimalizace pis5 = new Window_Piskvorky_AlfaBeta_optimalizace(velikost, hloubka, vyhra);
+                pis5.Show();
             }
             else
             {
