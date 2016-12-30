@@ -59,6 +59,13 @@ namespace Piskvorky
             ttt3.Show();
         }
 
+        private void button_ttc4_Click(object sender, RoutedEventArgs e)
+        {
+            // zobrazit nové okno (TicTacToe) + hloubka, Min Max zvlášť
+            Window_TicTacToe_MINMAX_hloubka ttt4 = new Window_TicTacToe_MINMAX_hloubka();
+            ttt4.Show();
+        }
+
         private void button_pis1_Click(object sender, RoutedEventArgs e)
         {
             int velikost, hloubka, vyhra;
@@ -79,13 +86,30 @@ namespace Piskvorky
         private void button_pis2_Click(object sender, RoutedEventArgs e)
         {
             int velikost, hloubka, vyhra;
-            if (int.TryParse(textBox_velikost2.Text, out velikost) &&
-                int.TryParse(textBox_hloubka2.Text, out hloubka) &&
-                int.TryParse(textBox_vyhra2.Text, out vyhra))
+            if (int.TryParse(textBox_velikost1.Text, out velikost) &&
+                int.TryParse(textBox_hloubka1.Text, out hloubka) &&
+                int.TryParse(textBox_vyhra1.Text, out vyhra))
             {
                 // zobrazit nové okno (Piskvorky) + lokální
                 Window_Piskvorky_lokalni pis2 = new Window_Piskvorky_lokalni(velikost, hloubka, vyhra);
                 pis2.Show();
+            }
+            else
+            {
+                MessageBox.Show("Velikost plochy, hloubka a počet na výhru musí být čísla");
+            }
+        }
+
+        private void button_pis3_Click(object sender, RoutedEventArgs e)
+        {
+            int velikost, hloubka, vyhra;
+            if (int.TryParse(textBox_velikost1.Text, out velikost) &&
+                int.TryParse(textBox_hloubka1.Text, out hloubka) &&
+                int.TryParse(textBox_vyhra1.Text, out vyhra))
+            {
+                // zobrazit nové okno Piskvorky 3
+                Window_Piskvorky_MINMAX pis3 = new Window_Piskvorky_MINMAX(velikost, hloubka, vyhra);
+                pis3.Show();
             }
             else
             {

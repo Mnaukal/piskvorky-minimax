@@ -26,6 +26,7 @@
             <Label x:Name="label_ohodnoceni" Content="" Grid.Column="1" HorizontalAlignment="Left" Height="65" Margin="25,296,0,0" VerticalAlignment="Top" Width="148"/>
             <ProgressBar x:Name="progressBar_tahPocitace" Grid.Column="1" HorizontalAlignment="Left" Height="19" Margin="25,247,0,0" VerticalAlignment="Top" Width="148" Value="100" IsIndeterminate="True" Visibility="Hidden"/>
             <Label x:Name="label_tahPocitace" Content="Probíhá tah počítače" Grid.Column="1" HorizontalAlignment="Left" Height="39" Margin="10,203,0,0" VerticalAlignment="Top" Width="178" FontSize="17.333" Foreground="Red" FontWeight="Bold" Visibility="Hidden"/>
+            <Label x:Name="label_cas" Content="" Grid.Column="1" HorizontalAlignment="Left" Height="44" Margin="25,247,0,0" VerticalAlignment="Top" Width="148"/>
         </Grid>
     </Grid>
 </Window>

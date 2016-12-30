@@ -26,6 +26,7 @@ namespace Piskvorky
         private NaTahu naTahu = NaTahu.hrac;
         private Tah vybranyTah;
         private bool konecHry = false;
+        System.Diagnostics.Stopwatch mereniCasu;
 
         private int[,] Smery = new int[,] { { 0, 1 }, { -1, 1 }, { -1, 0 }, { -1, -1 } }; // různé směry použité v hodnotící funkci: { posun v radku, posun ve sloupci }
 
@@ -52,6 +53,8 @@ namespace Piskvorky
                 label_tahPocitace.Visibility = Visibility.Visible;
             }));
 
+            mereniCasu = System.Diagnostics.Stopwatch.StartNew(); // měření délky běhu minimaxu
+
             MiniMax(1, 1, ((Tah)e.Argument).Radek, ((Tah)e.Argument).Sloupec);
         }
 
@@ -62,6 +65,9 @@ namespace Piskvorky
 
             progressBar_tahPocitace.Visibility = Visibility.Hidden;
             label_tahPocitace.Visibility = Visibility.Hidden;
+
+            mereniCasu.Stop();
+            label_cas.Content = mereniCasu.ElapsedMilliseconds;
 
             naTahu = NaTahu.hrac;
         }
@@ -85,17 +91,9 @@ namespace Piskvorky
                     //změní, kdo je na tahu
                     naTahu = NaTahu.pocitac;
 
-                    //najdi tah pro počítač
-                    // MiniMax(1, 1);
-
-                    //umísti tah počítače
-                    // UmistitTah(vybranyTah.Radek, vybranyTah.Sloupec);
-
-                    //změní, kdo je na tahu -> Hráč
-                    // naTahu = NaTahu.hrac;
-
                     //spustit MiniMax(1, 1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
-                    pozadi.RunWorkerAsync(new Tah(radek, sloupec, 0)); // poslední hráčův tah
+                    if (!konecHry)
+                        pozadi.RunWorkerAsync(new Tah(radek, sloupec, 0)); // poslední hráčův tah
                 }
                 else
                 {
@@ -282,10 +280,7 @@ namespace Piskvorky
             }
             else
             {
-                if (hodnoceni.Ohodnoceni == 0) // remíza
-                    return 0;
-                else
-                    return (int)hodnoceni.Ohodnoceni + hloubka * minMax;
+                    return hodnoceni.Ohodnoceni + hloubka * minMax;
             }
         }
 

@@ -26,6 +26,7 @@ namespace Piskvorky
         private NaTahu naTahu = NaTahu.hrac;
         private Tah vybranyTah;
         private bool konecHry = false;
+        System.Diagnostics.Stopwatch mereniCasu;
 
         // pro spuštění MiniMaxu na pozadí -> UI se nezasekne
         private readonly BackgroundWorker pozadi = new BackgroundWorker();
@@ -50,6 +51,8 @@ namespace Piskvorky
                 label_tahPocitace.Visibility = Visibility.Visible;
             }));
 
+            mereniCasu = System.Diagnostics.Stopwatch.StartNew(); // měření délky běhu minimaxu
+
             MiniMax(1, 1);
         }
 
@@ -60,6 +63,9 @@ namespace Piskvorky
 
             progressBar_tahPocitace.Visibility = Visibility.Hidden;
             label_tahPocitace.Visibility = Visibility.Hidden;
+
+            mereniCasu.Stop();
+            label_cas.Content = mereniCasu.ElapsedMilliseconds;
 
             naTahu = NaTahu.hrac;
         }
@@ -83,17 +89,12 @@ namespace Piskvorky
                     //změní, kdo je na tahu
                     naTahu = NaTahu.pocitac;
 
-                    //najdi tah pro počítač
-                    // MiniMax(1, 1);
-
-                    //umísti tah počítače
-                    // UmistitTah(vybranyTah.Radek, vybranyTah.Sloupec);
-
-                    //změní, kdo je na tahu -> Hráč
-                    // naTahu = NaTahu.hrac;
-
-                    //spustit MiniMax(1, 1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
-                    pozadi.RunWorkerAsync();
+                    if (checkBox_vypnoutPocitac.IsChecked == false) // není zapnut testovací mód
+                    {
+                        //spustit MiniMax(1, 1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
+                        if (!konecHry)
+                            pozadi.RunWorkerAsync();
+                    }
                 }
                 else
                 {
@@ -102,7 +103,23 @@ namespace Piskvorky
             }
             else
             {
-                MessageBox.Show("Teď nejsi na tahu.");
+                if(naTahu == NaTahu.pocitac && !konecHry && checkBox_vypnoutPocitac.IsChecked == true)
+                {
+                    Button _btn = sender as Button;
+                    int radek = (int)_btn.GetValue(Grid.RowProperty);
+                    int sloupec = (int)_btn.GetValue(Grid.ColumnProperty);
+                    if (plocha[radek, sloupec] == 0) //políčko je prázdné
+                    {
+                        UmistitTah(radek, sloupec);
+                        naTahu = NaTahu.hrac;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Tady není volné políčko! Hrajte jinam.");
+                    }
+                }
+                else
+                    MessageBox.Show("Teď nejsi na tahu.");
             }
         }
 
@@ -123,17 +140,11 @@ namespace Piskvorky
 
             if (zacinajici == NaTahu.pocitac)
             {
-                //najdi tah pro počítač
-                // MiniMax(1, 1);
-
-                //umísti tah počítače
-                // UmistitTah(vybranyTah.Radek, vybranyTah.Sloupec);
-
-                //změní, kdo je na tahu -> Hráč
-                // naTahu = NaTahu.hrac;
-
-                //spustit MiniMax(1, 1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
-                pozadi.RunWorkerAsync();
+                if (checkBox_vypnoutPocitac.IsChecked == false) // není zapnut testovací mód
+                {
+                    //spustit MiniMax(1, 1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
+                    pozadi.RunWorkerAsync();
+                }
             }
         }
 
@@ -272,20 +283,22 @@ namespace Piskvorky
                 int maximum = int.MinValue;
                 for (int i = 0; i < tahy.Count; i++)
                 {
+                    if (hloubka == 1)
+                        Console.WriteLine(tahy[i].Radek + ", " + tahy[i].Sloupec + ": " + tahy[i].Hodnota);
+
                     if (tahy[i].Hodnota * minMax > maximum) // * minMax (+1/-1) mění hledání minima a maxima -> po vynásobení je hodnocení vždy kladné
                     {
                         maximum = tahy[i].Hodnota * minMax; // nové maximum
                         vybranyTah = tahy[i];
                     }
                 }
-                return (maximum + hloubka) * minMax;
+                if (hloubka == 1)
+                    Console.WriteLine("---------------");
+                return (maximum - hloubka) * minMax;
             }
             else
             {
-                if (hodnoceni.Ohodnoceni == 0) // remíza
-                    return 0;
-                else
-                    return (int)hodnoceni.Ohodnoceni + hloubka * minMax;
+                return hodnoceni.Ohodnoceni + hloubka * minMax;
             }
         }
 

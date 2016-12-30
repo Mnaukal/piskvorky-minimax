@@ -16,9 +16,9 @@ using System.ComponentModel;
 namespace Piskvorky
 {
     /// <summary>
-    /// Interaction logic for Window_TicTacToe.xaml
+    /// Interaction logic for Window_TicTacToe_hloubka.xaml
     /// </summary>
-    public partial class Window_TicTacToe : Window
+    public partial class Window_TicTacToe_MINMAX_hloubka : Window
     {
         const int VELIKOST = 3;
         private int[,] plocha = new int[VELIKOST, VELIKOST];
@@ -31,7 +31,7 @@ namespace Piskvorky
         // pro spuštění MiniMaxu na pozadí -> UI se nezasekne
         private readonly BackgroundWorker pozadi = new BackgroundWorker();
 
-        public Window_TicTacToe()
+        public Window_TicTacToe_MINMAX_hloubka()
         {
             InitializeComponent();
 
@@ -53,8 +53,7 @@ namespace Piskvorky
 
             mereniCasu = System.Diagnostics.Stopwatch.StartNew(); // měření délky běhu minimaxu
 
-
-            MiniMax(1);
+            Max(1);
         }
 
         // spustí se po dokončení úkolu na pozadí -> umístí tah počítače a změní, kdo je na tahu
@@ -90,9 +89,12 @@ namespace Piskvorky
                     //změní, kdo je na tahu
                     naTahu = NaTahu.pocitac;
 
-                    //spustit MiniMax(1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
-                    if (!konecHry)
-                        pozadi.RunWorkerAsync();
+                    if (checkBox_vypnoutPocitac.IsChecked == false) // není zapnut testovací mód
+                    {
+                        //spustit MiniMax(1, 1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
+                        if (!konecHry)
+                            pozadi.RunWorkerAsync();
+                    }
                 }
                 else
                 {
@@ -101,7 +103,23 @@ namespace Piskvorky
             }
             else
             {
-                MessageBox.Show("Teď nejsi na tahu.");
+                if(naTahu == NaTahu.pocitac && !konecHry && checkBox_vypnoutPocitac.IsChecked == true)
+                {
+                    Button _btn = sender as Button;
+                    int radek = (int)_btn.GetValue(Grid.RowProperty);
+                    int sloupec = (int)_btn.GetValue(Grid.ColumnProperty);
+                    if (plocha[radek, sloupec] == 0) //políčko je prázdné
+                    {
+                        UmistitTah(radek, sloupec);
+                        naTahu = NaTahu.hrac;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Tady není volné políčko! Hrajte jinam.");
+                    }
+                }
+                else
+                    MessageBox.Show("Teď nejsi na tahu.");
             }
         }
 
@@ -121,9 +139,12 @@ namespace Piskvorky
             naTahu = zacinajici;
 
             if (zacinajici == NaTahu.pocitac)
-            { 
-                //spustit MiniMax(1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
-                pozadi.RunWorkerAsync();
+            {
+                if (checkBox_vypnoutPocitac.IsChecked == false) // není zapnut testovací mód
+                {
+                    //spustit MiniMax(1, 1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
+                    pozadi.RunWorkerAsync();
+                }
             }
         }
 
@@ -179,38 +200,38 @@ namespace Piskvorky
         /// <returns>aktuální ohodnocení hracího pole</returns>
         private StavHry Ohodnoceni()
         {
-            if (plocha[0, 0] + plocha[0, 1] + plocha[0, 2] == 3 * (int)naTahu) //hrac na tahu vyhral
+            if (plocha[0, 0] + plocha[0, 1] + plocha[0, 2] == -3 ) //hrac na tahu vyhral
                 return new StavHry(true, 10);
-            if (plocha[1, 0] + plocha[1, 1] + plocha[1, 2] == 3 * (int)naTahu)
+            if (plocha[1, 0] + plocha[1, 1] + plocha[1, 2] == -3 )
                 return new StavHry(true, 10);
-            if (plocha[2, 0] + plocha[2, 1] + plocha[2, 2] == 3 * (int)naTahu)
+            if (plocha[2, 0] + plocha[2, 1] + plocha[2, 2] == -3 )
                 return new StavHry(true, 10);
-            if (plocha[0, 0] + plocha[1, 0] + plocha[2, 0] == 3 * (int)naTahu)
+            if (plocha[0, 0] + plocha[1, 0] + plocha[2, 0] == -3 )
                 return new StavHry(true, 10);
-            if (plocha[0, 1] + plocha[1, 1] + plocha[2, 1] == 3 * (int)naTahu)
+            if (plocha[0, 1] + plocha[1, 1] + plocha[2, 1] == -3 )
                 return new StavHry(true, 10);
-            if (plocha[0, 2] + plocha[1, 2] + plocha[2, 2] == 3 * (int)naTahu)
+            if (plocha[0, 2] + plocha[1, 2] + plocha[2, 2] == -3 )
                 return new StavHry(true, 10);
-            if (plocha[0, 0] + plocha[1, 1] + plocha[2, 2] == 3 * (int)naTahu)
+            if (plocha[0, 0] + plocha[1, 1] + plocha[2, 2] == -3 )
                 return new StavHry(true, 10);
-            if (plocha[0, 2] + plocha[1, 1] + plocha[2, 0] == 3 * (int)naTahu)
+            if (plocha[0, 2] + plocha[1, 1] + plocha[2, 0] == -3 )
                 return new StavHry(true, 10);
 
-            if (plocha[0, 0] + plocha[0, 1] + plocha[0, 2] == -3 * (int)naTahu) //hrac na tahu prohral
+            if (plocha[0, 0] + plocha[0, 1] + plocha[0, 2] == 3) //hrac na tahu prohral
                 return new StavHry(true, -10);
-            if (plocha[1, 0] + plocha[1, 1] + plocha[1, 2] == -3 * (int)naTahu)
+            if (plocha[1, 0] + plocha[1, 1] + plocha[1, 2] == 3)
                 return new StavHry(true, -10);
-            if (plocha[2, 0] + plocha[2, 1] + plocha[2, 2] == -3 * (int)naTahu)
+            if (plocha[2, 0] + plocha[2, 1] + plocha[2, 2] == 3)
                 return new StavHry(true, -10);
-            if (plocha[0, 0] + plocha[1, 0] + plocha[2, 0] == -3 * (int)naTahu)
+            if (plocha[0, 0] + plocha[1, 0] + plocha[2, 0] == 3)
                 return new StavHry(true, -10);
-            if (plocha[0, 1] + plocha[1, 1] + plocha[2, 1] == -3 * (int)naTahu)
+            if (plocha[0, 1] + plocha[1, 1] + plocha[2, 1] == 3)
                 return new StavHry(true, -10);
-            if (plocha[0, 2] + plocha[1, 2] + plocha[2, 2] == -3 * (int)naTahu)
+            if (plocha[0, 2] + plocha[1, 2] + plocha[2, 2] == 3)
                 return new StavHry(true, -10);
-            if (plocha[0, 0] + plocha[1, 1] + plocha[2, 2] == -3 * (int)naTahu)
+            if (plocha[0, 0] + plocha[1, 1] + plocha[2, 2] == 3)
                 return new StavHry(true, -10);
-            if (plocha[0, 2] + plocha[1, 1] + plocha[2, 0] == -3 * (int)naTahu)
+            if (plocha[0, 2] + plocha[1, 1] + plocha[2, 0] == 3)
                 return new StavHry(true, -10);
 
             if (pocetVolnych == 0)
@@ -220,16 +241,17 @@ namespace Piskvorky
         }
 
         /// <summary>
-        /// Minimax
+        /// Maximalizační část minimaxu
         /// </summary>
-        /// <param name="minMax">-1 => min; 1 => max</param>
-        private int MiniMax(int minMax)
+        /// <param name="hloubka">hloubka prohledávání</param>
+        /// <returns></returns>
+        private int Max(int hloubka)
         {
             StavHry hodnoceni = Ohodnoceni();
 
             if (hodnoceni.Dohrano == false) // nedohráno
             {
-                List<Tah> tahy = new List<Tah>();
+                int maximum = int.MinValue;
 
                 // projdi všehcna pole
                 for (int i = 0; i < VELIKOST; i++)
@@ -239,39 +261,89 @@ namespace Piskvorky
                         if (plocha[i, j] == 0) // volné pole
                         {
                             // umístit tah do plochy 
-                            plocha[i, j] = -minMax; //(int)naTahu; // umístit tah
+                            plocha[i, j] = -1;
                             pocetVolnych--;
-                            //naTahu = (NaTahu)(-(int)naTahu); // změnit hráče na tahu
 
                             //najít další tah
-                            tahy.Add(new Tah(i, j, MiniMax(-minMax))); // další MiniMax
+                            int hodnotaTahu = Min(hloubka + 1); // vnitřní Min
+
+                            if (hloubka == 1) // debug
+                                Console.WriteLine(i + ", " + j + ": " + hodnotaTahu);
+
+                            if (hodnotaTahu > maximum) // nový nejlepší tah
+                            {
+                                maximum = hodnotaTahu;
+                                if(hloubka == 1)
+                                    vybranyTah = new Tah(i, j, hodnotaTahu);
+                            }
 
                             // smazat tah z plochy
                             plocha[i, j] = 0; // znovu uvolnit pole 
                             pocetVolnych++;
-                            //naTahu = (NaTahu)(-(int)naTahu); // vrátit hráče na tahu
                         }
                     }
                 }
 
-                if (tahy.Count == 0) //neexistuje žádný tah
+                if (maximum == int.MinValue) //neexistuje žádný tah
                     return 0;
 
-                //najdi maximum/minimum
-                int maximum = int.MinValue;
-                for (int i = 0; i < tahy.Count; i++)
-                {
-                    if (tahy[i].Hodnota * minMax > maximum) // * minMax (+1/-1) mění hledání minima a maxima -> po vynásobení je hodnocení vždy kladné
-                    {
-                        maximum = tahy[i].Hodnota * minMax; // nové maximum
-                        vybranyTah = tahy[i];
-                    }
-                }
-                return maximum * minMax;
+                if (hloubka == 1)
+                    Console.WriteLine("---------------");
+                return maximum + hloubka;
             }
             else
             {
-                return hodnoceni.Ohodnoceni;
+                return hodnoceni.Ohodnoceni + hloubka;
+            }
+        }
+
+        /// <summary>
+        /// Minimalizační část minimaxu
+        /// </summary>
+        /// <param name="hloubka">hloubka prohledávání</param>
+        /// <returns></returns>
+        private int Min(int hloubka)
+        {
+            StavHry hodnoceni = Ohodnoceni();
+
+            if (hodnoceni.Dohrano == false) // nedohráno
+            {
+                int minimum = int.MaxValue;
+
+                // projdi všehcna pole
+                for (int i = 0; i < VELIKOST; i++)
+                {
+                    for (int j = 0; j < VELIKOST; j++)
+                    {
+                        if (plocha[i, j] == 0) // volné pole
+                        {
+                            // umístit tah do plochy 
+                            plocha[i, j] = 1;
+                            pocetVolnych--;
+
+                            //najít další tah
+                            int hodnotaTahu = Max(hloubka + 1); // vnitřní Max
+
+                            if (hodnotaTahu < minimum) // nový nejlepší tah
+                            {
+                                minimum = hodnotaTahu;
+                            }
+
+                            // smazat tah z plochy
+                            plocha[i, j] = 0; // znovu uvolnit pole 
+                            pocetVolnych++;
+                        }
+                    }
+                }
+
+                if (minimum == int.MaxValue) //neexistuje žádný tah
+                    return 0;
+
+                return minimum - hloubka;
+            }
+            else
+            {
+                return hodnoceni.Ohodnoceni - hloubka;
             }
         }
 
