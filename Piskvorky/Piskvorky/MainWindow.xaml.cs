@@ -117,6 +117,23 @@ namespace Piskvorky
             }
         }
 
+        private void button_pis4_Click(object sender, RoutedEventArgs e)
+        {
+            int velikost, hloubka, vyhra;
+            if (int.TryParse(textBox_velikost1.Text, out velikost) &&
+                int.TryParse(textBox_hloubka1.Text, out hloubka) &&
+                int.TryParse(textBox_vyhra1.Text, out vyhra))
+            {
+                // zobrazit nové okno Piskvorky 4
+                Window_Piskvorky_AlfaBeta pis3 = new Window_Piskvorky_AlfaBeta(velikost, hloubka, vyhra);
+                pis3.Show();
+            }
+            else
+            {
+                MessageBox.Show("Velikost plochy, hloubka a počet na výhru musí být čísla");
+            }
+        }
+
         private void textBox_GotFocus(object sender, RoutedEventArgs e)
         {
             (sender as TextBox).SelectAll();

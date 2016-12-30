@@ -75,6 +75,7 @@ namespace Piskvorky
 
             pozadi.DoWork += Pozadi_DoWork;
             pozadi.RunWorkerCompleted += Pozadi_RunWorkerCompleted;
+            pozadi.WorkerSupportsCancellation = true;
 
             Start(NaTahu.hrac);
         }
@@ -302,6 +303,9 @@ namespace Piskvorky
         /// <param name="sloupec">sloupec zkoušeného/posledního tahu</param>
         private int MiniMax(int minMax, int hloubka, int radek, int sloupec)
         {
+            if (pozadi.CancellationPending) // přerušení při zavření okna
+                return 0;
+
             StavHry hodnoceni = Ohodnoceni(radek, sloupec);
 
             if (hodnoceni.Dohrano == false && hloubka <= MAXHLOUBKA) // nedohráno a nepřekročena hloubka
@@ -386,6 +390,12 @@ namespace Piskvorky
                 ScrollViewer_hraciPlocha_scale.ScaleY = 0.1;
 
             e.Handled = true;
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (pozadi.IsBusy)
+                pozadi.CancelAsync();
         }
     }
 }

@@ -37,6 +37,7 @@ namespace Piskvorky
 
             pozadi.DoWork += Pozadi_DoWork;
             pozadi.RunWorkerCompleted += Pozadi_RunWorkerCompleted;
+            pozadi.WorkerSupportsCancellation = true;
 
             Start(NaTahu.hrac);
         }
@@ -225,6 +226,9 @@ namespace Piskvorky
         /// <param name="minMax">-1 => min; 1 => max</param>
         private int MiniMax(int minMax)
         {
+            if (pozadi.CancellationPending) // přerušení při zavření okna
+                return 0;
+
             StavHry hodnoceni = Ohodnoceni();
 
             if (hodnoceni.Dohrano == false) // nedohráno
@@ -285,6 +289,12 @@ namespace Piskvorky
         private void button_start_pocitac_Click(object sender, RoutedEventArgs e)
         {
             Start(NaTahu.pocitac);
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (pozadi.IsBusy)
+                pozadi.CancelAsync();
         }
     }
 }

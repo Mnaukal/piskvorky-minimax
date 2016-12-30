@@ -91,6 +91,7 @@ namespace Piskvorky
 
             pozadi.DoWork += Pozadi_DoWork;
             pozadi.RunWorkerCompleted += Pozadi_RunWorkerCompleted;
+            pozadi.WorkerSupportsCancellation = true;
 
             Start(NaTahu.hrac);
         }
@@ -295,9 +296,9 @@ namespace Piskvorky
 
                         if (pocetVRade >= VYHRA) // někdo má 5 v řadě
                         {
-                            if (symbol == -(int)naTahu) // hrac na tahu prohral
+                            if (symbol == 1) // počítač prohrál
                                 return new StavHry(true, -100000);
-                            else if (symbol == (int)naTahu) // hrac na tahu vyhral
+                            else if (symbol == -1) // počítač vyhrál
                                 return new StavHry(true, 100000);
                         }
                     }
@@ -331,6 +332,9 @@ namespace Piskvorky
         /// <returns></returns>
         private int Max(int hloubka)
         {
+            if (pozadi.CancellationPending) // přerušení při zavření okna
+                return 0;
+
             StavHry hodnoceni = Ohodnoceni();
 
             if (hodnoceni.Dohrano == false && hloubka <= MAXHLOUBKA) // nedohráno
@@ -388,6 +392,9 @@ namespace Piskvorky
         /// <returns></returns>
         private int Min(int hloubka)
         {
+            if (pozadi.CancellationPending) // přerušení při zavření okna
+                return 0;
+
             StavHry hodnoceni = Ohodnoceni();
 
             if (hodnoceni.Dohrano == false && hloubka <= MAXHLOUBKA) // nedohráno
@@ -460,6 +467,12 @@ namespace Piskvorky
                 ScrollViewer_hraciPlocha_scale.ScaleY = 0.1;
 
             e.Handled = true;
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (pozadi.IsBusy)
+                pozadi.CancelAsync();
         }
     }
 }

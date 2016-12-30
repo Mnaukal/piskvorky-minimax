@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Piskvorky"
         mc:Ignorable="d"
-        Title="Piškvorky" Height="500" Width="730" Loaded="Window_Loaded">
+        Title="Piškvorky" Height="500" Width="730" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
         <Grid x:Name="grid_window" Margin="0">
             <Grid.ColumnDefinitions>

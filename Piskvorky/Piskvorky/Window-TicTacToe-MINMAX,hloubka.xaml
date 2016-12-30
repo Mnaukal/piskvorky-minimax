@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Piskvorky"
         mc:Ignorable="d"
-        Title="TicTacToe + hloubka, min max zvlášť" Height="400" Width="600" ResizeMode="NoResize">
+        Title="TicTacToe + hloubka, min max zvlášť" Height="400" Width="600" ResizeMode="NoResize" Closing="Window_Closing">
     <Grid>
         <Grid x:Name="grid_window" Margin="0">
             <Grid.ColumnDefinitions>
