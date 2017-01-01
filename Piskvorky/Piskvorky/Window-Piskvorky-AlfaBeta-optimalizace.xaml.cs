@@ -29,6 +29,7 @@ namespace Piskvorky
         private NaTahu naTahu = NaTahu.hrac;
         private Tah vybranyTah;
         private bool konecHry = false;
+        private bool Testovani = false;
         int levy, pravy, horni, dolni;
         string zahraneTahy;
         System.Diagnostics.Stopwatch mereniCasu;
@@ -38,7 +39,7 @@ namespace Piskvorky
         // pro spuštění MiniMaxu na pozadí -> UI se nezasekne
         private readonly BackgroundWorker pozadi = new BackgroundWorker();
 
-        public Window_Piskvorky_AlfaBeta_optimalizace(int velikost, int hloubka, int vyhra)
+        public Window_Piskvorky_AlfaBeta_optimalizace(int velikost, int hloubka, int vyhra, bool testovani)
         {
             InitializeComponent();
             
@@ -96,6 +97,14 @@ namespace Piskvorky
             pozadi.RunWorkerCompleted += Pozadi_RunWorkerCompleted;
             pozadi.WorkerSupportsCancellation = true;
 
+            if (!testovani)
+            {
+                label_cas.Visibility = Visibility.Hidden;
+                checkBox_vypnoutPocitac.Visibility = Visibility.Hidden;
+                checkBox_vypnoutPocitac.IsEnabled = false;
+            }
+            Testovani = testovani;
+
             Start(NaTahu.hrac);
         }
 
@@ -111,7 +120,17 @@ namespace Piskvorky
 
             mereniCasu = System.Diagnostics.Stopwatch.StartNew(); // měření délky běhu minimaxu
 
+            // spustit nejdřív jen do hloubky 1
+            int predchoziHloubka = MAXHLOUBKA;
+            MAXHLOUBKA = 1;
             Max(1, int.MinValue, int.MaxValue);
+            MAXHLOUBKA = predchoziHloubka;
+            if(vybranyTah.Hodnota >= 999990) // výhra
+            {
+                // je vybrán výherní tah
+            }
+            else
+                Max(1, int.MinValue, int.MaxValue); // hledáme s původní MAX hloubkou
         }
 
         // spustí se po dokončení úkolu na pozadí -> umístí tah počítače a změní, kdo je na tahu
@@ -210,9 +229,6 @@ namespace Piskvorky
                     progressBar_tahPocitace.Visibility = Visibility.Hidden;
                     label_tahPocitace.Visibility = Visibility.Hidden;
 
-                    mereniCasu.Stop();
-                    label_cas.Content = mereniCasu.ElapsedMilliseconds;
-
                     naTahu = NaTahu.hrac;
                 }
             }
@@ -299,9 +315,9 @@ namespace Piskvorky
         {
             int hodnoceni = 0;
 
-            for (int radek = 0; radek < VELIKOST; radek++)
+            for (int radek = horni; radek < dolni; radek++)
             {
-                for (int sloupec = 0; sloupec < VELIKOST; sloupec++) // pro každé políčko hrací plochy spočítáme ohodnocení a sečteme
+                for (int sloupec = levy; sloupec < pravy; sloupec++) // pro každé políčko hrací plochy spočítáme ohodnocení a sečteme
                 {
                     if (plocha[radek, sloupec] == 0)
                         continue; // prázdné políčko
@@ -374,18 +390,18 @@ namespace Piskvorky
                         else if(volnyKonecDopredu && volnyKonecDozadu) // oba konce volné
                         {
                             if(pocetVRade >= 2)
-                                hodnoceniPolicka += (int)Math.Pow(3, pocetVRade) * symbol * -1;
+                                hodnoceniPolicka += (int)Math.Pow(7, pocetVRade) * symbol * -1;
                         }
                         else // jeden volný konec
                         {
                             if (pocetVRade >= 2)
-                                hodnoceniPolicka += (int)Math.Pow(2, pocetVRade) * symbol * -1;
+                                hodnoceniPolicka += (int)Math.Pow(5, pocetVRade) * symbol * -1;
                         }
                     }
 
                     hodnoceni += hodnoceniPolicka;
 
-                    if (ukazovatHodnoceniPolicek)
+                    if (ukazovatHodnoceniPolicek && Testovani)
                     {
                         Label labelNaPozici = grid_hraciPlocha.Children
                             .OfType<Label>()
@@ -424,15 +440,29 @@ namespace Piskvorky
                     for (int j = VELIKOST / 2; j < VELIKOST && j >= 0; j = (j - VELIKOST / 2f < 0) ? VELIKOST - j : VELIKOST - j - 1)
                     {*/
 
-                for (int i = (horni + dolni) / 2; i < dolni && i >= horni; i = (i - (horni + dolni) / 2f < 0) ? (horni + dolni) - i : (horni + dolni) - i - 1) // řádky
+                for (int i = (horni + dolni) / 2; i < dolni && i >= horni; i = (i - (horni + dolni) / 2f < 0) ? (horni + dolni) - i : (horni + dolni) - i - 1) // řádky - postupně od středu
                 {
-                    for (int j = (levy + pravy) / 2; j < pravy && j >= levy; j = (j - (levy + pravy) / 2f < 0) ? (levy + pravy) - j : (levy + pravy) - j - 1) // sloupce
+                    for (int j = (levy + pravy) / 2; j < pravy && j >= levy; j = (j - (levy + pravy) / 2f < 0) ? (levy + pravy) - j : (levy + pravy) - j - 1) // sloupce - postupně od středu
                     {
                         if (plocha[i, j] == 0) // volné pole
                         {
                             // umístit tah do plochy 
                             plocha[i, j] = -1;
                             pocetVolnych--;
+
+                            // nově nastavit okraje prohledávání (dočasně)
+                            int predchoziLevy = levy;
+                            int predchoziPravy = pravy;
+                            int predchoziHorni = horni;
+                            int predchoziDolni = dolni;
+                            if (i - 2 < horni)
+                                horni = Math.Max(i - 2, 0);
+                            if (i + 2 > dolni)
+                                dolni = Math.Min(i + 2, VELIKOST);
+                            if (j - 2 < levy)
+                                levy = Math.Max(j - 2, 0);
+                            if (j + 2 > pravy)
+                                pravy = Math.Min(j + 2, VELIKOST);
 
                             //najít další tah
                             int hodnotaTahu = Min(hloubka + 1, alfa, beta); // vnitřní Min
@@ -454,6 +484,11 @@ namespace Piskvorky
                             // smazat tah z plochy
                             plocha[i, j] = 0; // znovu uvolnit pole 
                             pocetVolnych++;
+                            // vrátit okraje prohledávání
+                            levy= predchoziLevy;
+                            pravy = predchoziPravy;
+                            horni = predchoziHorni;
+                            dolni = predchoziDolni;
 
                             if (beta <= alfa)
                                 goto konecCyklu;
@@ -502,6 +537,20 @@ namespace Piskvorky
                             plocha[i, j] = 1;
                             pocetVolnych--;
 
+                            // nově nastavit okraje prohledávání (dočasně)
+                            int predchoziLevy = levy;
+                            int predchoziPravy = pravy;
+                            int predchoziHorni = horni;
+                            int predchoziDolni = dolni;
+                            if (i - 2 < horni)
+                                horni = Math.Max(i - 2, 0);
+                            if (i + 2 > dolni)
+                                dolni = Math.Min(i + 2, VELIKOST);
+                            if (j - 2 < levy)
+                                levy = Math.Max(j - 2, 0);
+                            if (j + 2 > pravy)
+                                pravy = Math.Min(j + 2, VELIKOST);
+
                             //najít další tah
                             int hodnotaTahu = Max(hloubka + 1, alfa, beta); // vnitřní Max
                             beta = Math.Min(beta, hodnotaTahu);
@@ -514,6 +563,11 @@ namespace Piskvorky
                             // smazat tah z plochy
                             plocha[i, j] = 0; // znovu uvolnit pole 
                             pocetVolnych++;
+                            // vrátit okraje prohledávání
+                            levy = predchoziLevy;
+                            pravy = predchoziPravy;
+                            horni = predchoziHorni;
+                            dolni = predchoziDolni;
 
                             if (beta <= alfa)
                                 goto konecCyklu;

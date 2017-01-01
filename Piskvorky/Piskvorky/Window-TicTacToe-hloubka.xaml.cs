@@ -31,13 +31,20 @@ namespace Piskvorky
         // pro spuštění MiniMaxu na pozadí -> UI se nezasekne
         private readonly BackgroundWorker pozadi = new BackgroundWorker();
 
-        public Window_TicTacToe_hloubka()
+        public Window_TicTacToe_hloubka(bool testovani)
         {
             InitializeComponent();
 
             pozadi.DoWork += Pozadi_DoWork;
             pozadi.RunWorkerCompleted += Pozadi_RunWorkerCompleted;
             pozadi.WorkerSupportsCancellation = true;
+
+            if(!testovani)
+            {
+                label_cas.Visibility = Visibility.Hidden;
+                checkBox_vypnoutPocitac.Visibility = Visibility.Hidden;
+                checkBox_vypnoutPocitac.IsEnabled = false;
+            }
 
             Start(NaTahu.hrac);
         }

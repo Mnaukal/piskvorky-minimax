@@ -5,66 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Piskvorky"
         mc:Ignorable="d"
-        Title="MainWindow" Height="479.417" Width="640" Closing="Window_Closing">
+        Title="Piškvorky Minimax" Height="491.417" Width="432.8" Closing="Window_Closing">
     <Grid>
-        <Label x:Name="label" Content="Piškvorky - Minimax" Height="47" Margin="120,22,120,0" VerticalAlignment="Top" FontSize="26.667" HorizontalAlignment="Center" FontWeight="Bold" Width="355" HorizontalContentAlignment="Center"/>
-        <Button x:Name="button_ttc1" Content="Tic-Tac-Toe (3x3)" Height="70" Margin="10,80,0,0" VerticalAlignment="Top" FontSize="16" Click="button_ttc1_Click" HorizontalAlignment="Left" Width="200"/>
-        <Button x:Name="button_ttc2" Height="70" Margin="215,80,0,0" VerticalAlignment="Top" FontSize="16" Click="button_ttc2_Click" HorizontalAlignment="Left" Width="200">
-            <StackPanel>
-                <TextBlock Text="Tic-Tac-Toe (3x3)" HorizontalAlignment="Center"/>
-                <TextBlock Text="+ hloubka" HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic"/>
-            </StackPanel>
+        <Label x:Name="label" Content="Piškvorky - Minimax" Height="47" Margin="10,10,10,0" VerticalAlignment="Top" FontSize="30" FontWeight="Bold" HorizontalContentAlignment="Center"/>
+        <Button x:Name="button_ttc" Height="70" Margin="100,80,100,0" VerticalAlignment="Top" FontSize="16" Click="button_ttc_Click">
+            <TextBlock Text="Tic-Tac-Toe (3x3)" HorizontalAlignment="Center"/>
         </Button>
-        <Button x:Name="button_ttc4" Height="70" Margin="420,80,-3,0" VerticalAlignment="Top" FontSize="16" Click="button_ttc4_Click" HorizontalAlignment="Left" Width="200">
-            <StackPanel>
-                <TextBlock Text="Tic-Tac-Toe (3x3)" HorizontalAlignment="Center"/>
-                <TextBlock HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic">+ hloubka<LineBreak/>+ Min Max zvlášť</TextBlock>
-            </StackPanel>
+        <Label x:Name="label_velikost" Content="Velikost plochy:" HorizontalAlignment="Left" Height="26" Margin="140,196,0,0" VerticalAlignment="Top" Width="93"/>
+        <TextBox x:Name="textBox_velikost" HorizontalAlignment="Left" Height="22" Margin="238,200,0,0" TextWrapping="Wrap" Text="20" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="4" GotFocus="textBox_GotFocus"/>
+        <Label x:Name="label_hloubka" Content="Hloubka:" HorizontalAlignment="Left" Height="26" Margin="141,227,0,0" VerticalAlignment="Top" Width="93"/>
+        <TextBox x:Name="textBox_hloubka" HorizontalAlignment="Left" Height="22" Margin="238,231,0,0" TextWrapping="Wrap" Text="3" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="2" GotFocus="textBox_GotFocus"/>
+        <Label x:Name="label_vyhra" Content="Počet na výhru:" HorizontalAlignment="Left" Height="26" Margin="141,258,0,0" VerticalAlignment="Top" Width="93"/>
+        <TextBox x:Name="textBox_vyhra" HorizontalAlignment="Left" Height="22" Margin="238,262,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="1" GotFocus="textBox_GotFocus"/>
+        <Button x:Name="button_pis" Height="70" Margin="100,289,100.4,0" VerticalAlignment="Top" FontSize="16" Click="button_pis_Click">
+            <TextBlock Text="Piškvorky" HorizontalAlignment="Center"/>
         </Button>
-        <Button x:Name="button_ttc3" Height="70" Margin="10,155,0,0" VerticalAlignment="Top" FontSize="16" Click="button_ttc3_Click" HorizontalAlignment="Left" Width="200">
-            <StackPanel>
-                <TextBlock Text="Tic-Tac-Toe (3x3)" HorizontalAlignment="Center"/>
-                <TextBlock HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic">+ hloubka<LineBreak/>+ "lokální" hodnocení</TextBlock>
-            </StackPanel>
-        </Button>
-        <Button x:Name="button_pis1" Height="70" Margin="215,267,0,0" VerticalAlignment="Top" FontSize="16" Click="button_pis1_Click" HorizontalAlignment="Left" Width="200">
-            <StackPanel>
-                <TextBlock Text="Piškvorky" HorizontalAlignment="Center"/>
-                <TextBlock HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic"><Run Text="+ hloubka"/></TextBlock>
-            </StackPanel>
-        </Button>
-        <Label x:Name="label_velikost1" Content="Velikost plochy:" HorizontalAlignment="Left" Height="26" Margin="10,249,0,0" VerticalAlignment="Top" Width="93"/>
-        <TextBox x:Name="textBox_velikost1" HorizontalAlignment="Left" Height="22" Margin="108,253,0,0" TextWrapping="Wrap" Text="20" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="4" GotFocus="textBox_GotFocus"/>
-        <Label x:Name="label_hloubka1" Content="Hloubka:" HorizontalAlignment="Left" Height="26" Margin="11,280,0,0" VerticalAlignment="Top" Width="93"/>
-        <TextBox x:Name="textBox_hloubka1" HorizontalAlignment="Left" Height="22" Margin="108,284,0,0" TextWrapping="Wrap" Text="3" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="2" GotFocus="textBox_GotFocus"/>
-        <Label x:Name="label_vyhra1" Content="Počet na výhru:" HorizontalAlignment="Left" Height="26" Margin="11,311,0,0" VerticalAlignment="Top" Width="93"/>
-        <TextBox x:Name="textBox_vyhra1" HorizontalAlignment="Left" Height="22" Margin="108,315,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="44" MaxLines="1" MaxLength="1" GotFocus="textBox_GotFocus"/>
-        <Button x:Name="button_pis2" Height="70" Margin="10,342,0,0" VerticalAlignment="Top" FontSize="16" Click="button_pis2_Click" HorizontalAlignment="Left" Width="200">
-            <StackPanel>
-                <TextBlock Text="Piškvorky" HorizontalAlignment="Center"/>
-                <TextBlock HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic"><Run Text="+ hloubka"/><LineBreak/><Run Text="+ &quot;lokální&quot; hodnocení"/></TextBlock>
-            </StackPanel>
-        </Button>
-        <Button x:Name="button_pis3" Height="70" Margin="420,267,0,0" VerticalAlignment="Top" FontSize="16" Click="button_pis3_Click" HorizontalAlignment="Left" Width="200">
-            <StackPanel>
-                <TextBlock Text="Piškvorky" HorizontalAlignment="Center"/>
-                <TextBlock HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic">+ hloubka<LineBreak/>+ Min Max zvlášť</TextBlock>
-            </StackPanel>
-        </Button>
-        <Button x:Name="button_pis4" Height="70" Margin="215,342,0,0" VerticalAlignment="Top" FontSize="16" Click="button_pis4_Click" HorizontalAlignment="Left" Width="200">
-            <StackPanel>
-                <TextBlock Text="Piškvorky" HorizontalAlignment="Center"/>
-                <TextBlock HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic"><Run Text="AlfaBeta"/></TextBlock>
-            </StackPanel>
-        </Button>
-        <Button x:Name="button_pis5" Height="70" Margin="420,342,0,0" VerticalAlignment="Top" FontSize="16" Click="button_pis5_Click" HorizontalAlignment="Left" Width="200">
-            <StackPanel>
-                <TextBlock Text="Piškvorky" HorizontalAlignment="Center"/>
-                <TextBlock HorizontalAlignment="Center" FontSize="13.333" FontStyle="Italic">AlfaBeta<LineBreak/>+ optimalizace</TextBlock>
-            </StackPanel>
-        </Button>
-
-
-
+        <Button x:Name="button_testovani" Content="Testování" Height="40" Margin="100,0,100,10" VerticalAlignment="Bottom" Click="button_testovani_Click"/>
     </Grid>
 </Window>
