@@ -31,13 +31,20 @@ namespace Piskvorky
         // pro spuštění MiniMaxu na pozadí -> UI se nezasekne
         private readonly BackgroundWorker pozadi = new BackgroundWorker();
 
-        public Window_TicTacToe_MINMAX_hloubka()
+        public Window_TicTacToe_MINMAX_hloubka(bool testovani)
         {
             InitializeComponent();
 
             pozadi.DoWork += Pozadi_DoWork;
             pozadi.RunWorkerCompleted += Pozadi_RunWorkerCompleted;
             pozadi.WorkerSupportsCancellation = true;
+
+            if (!testovani)
+            {
+                label_cas.Visibility = Visibility.Hidden;
+                checkBox_vypnoutPocitac.Visibility = Visibility.Hidden;
+                checkBox_vypnoutPocitac.IsEnabled = false;
+            }
 
             Start(NaTahu.hrac);
         }
@@ -250,6 +257,9 @@ namespace Piskvorky
         /// <returns></returns>
         private int Max(int hloubka)
         {
+            if (pozadi.CancellationPending) // přerušení při zavření okna
+                return 0;
+
             StavHry hodnoceni = Ohodnoceni();
 
             if (hodnoceni.Dohrano == false) // nedohráno

@@ -41,7 +41,7 @@ namespace Piskvorky
         private void button_ttc_Click(object sender, RoutedEventArgs e)
         {
             // zobrazit nové okno (TicTacToe) + hloubka
-            Window_TicTacToe_hloubka ttt = new Window_TicTacToe_hloubka(false);
+            Window_TicTacToe_MINMAX_hloubka ttt = new Window_TicTacToe_MINMAX_hloubka(false);
             ttt.Show();
         }       
         private void button_pis_Click(object sender, RoutedEventArgs e)

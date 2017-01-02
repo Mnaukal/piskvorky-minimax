@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Piskvorky"
         mc:Ignorable="d"
-        Title="TicTacToe + hloubka, min max zvlášť" Height="400" Width="600" ResizeMode="NoResize" Closing="Window_Closing">
+        Title="TicTacToe" Height="400" Width="600" ResizeMode="NoResize" Closing="Window_Closing">
     <Grid>
         <Grid x:Name="grid_window" Margin="0">
             <Grid.ColumnDefinitions>
@@ -40,7 +40,7 @@
             </Grid>
             <Button x:Name="button_start_hrac" Content="Nová hra - začíná hráč" Grid.Column="1" Height="50" Margin="25,26,25,0" VerticalAlignment="Top" Click="button_start_hrac_Click"/>
             <Button x:Name="button_start_pocitac" Content="Nová hra - začíná počítač" Grid.Column="1" Height="50" Margin="25,81,25,0" VerticalAlignment="Top" Click="button_start_pocitac_Click"/>
-            <Label x:Name="label_ohodnoceni" Content="" Grid.Column="1" HorizontalAlignment="Left" Height="65" Margin="25,296,0,0" VerticalAlignment="Top" Width="148"/>
+            <Label x:Name="label_ohodnoceni" Content="" Grid.Column="1" HorizontalAlignment="Left" Height="65" Margin="25,296,0,0" VerticalAlignment="Top" Width="148" FontSize="20"/>
             <ProgressBar x:Name="progressBar_tahPocitace" Grid.Column="1" HorizontalAlignment="Left" Height="19" Margin="25,247,0,0" VerticalAlignment="Top" Width="148" Value="100" IsIndeterminate="True" Visibility="Hidden"/>
             <Label x:Name="label_tahPocitace" Content="Probíhá tah počítače" Grid.Column="1" HorizontalAlignment="Left" Height="39" Margin="10,203,0,0" VerticalAlignment="Top" Width="178" FontSize="17.333" Foreground="Red" FontWeight="Bold" Visibility="Hidden"/>
             <Label x:Name="label_cas" Content="" Grid.Column="1" HorizontalAlignment="Left" Height="44" Margin="25,247,0,0" VerticalAlignment="Top" Width="148"/>

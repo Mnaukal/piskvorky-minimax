@@ -39,7 +39,7 @@ namespace Piskvorky
             pozadi.RunWorkerCompleted += Pozadi_RunWorkerCompleted;
             pozadi.WorkerSupportsCancellation = true;
 
-            if(!testovani)
+            if (!testovani)
             {
                 label_cas.Visibility = Visibility.Hidden;
                 checkBox_vypnoutPocitac.Visibility = Visibility.Hidden;
@@ -210,38 +210,38 @@ namespace Piskvorky
         /// <returns>aktuální ohodnocení hracího pole</returns>
         private StavHry Ohodnoceni()
         {
-            if (plocha[0, 0] + plocha[0, 1] + plocha[0, 2] == 3 * (int)naTahu) //hrac na tahu vyhral
+            if (plocha[0, 0] + plocha[0, 1] + plocha[0, 2] == -3 ) //hrac na tahu vyhral
                 return new StavHry(true, 10);
-            if (plocha[1, 0] + plocha[1, 1] + plocha[1, 2] == 3 * (int)naTahu)
+            if (plocha[1, 0] + plocha[1, 1] + plocha[1, 2] == -3 )
                 return new StavHry(true, 10);
-            if (plocha[2, 0] + plocha[2, 1] + plocha[2, 2] == 3 * (int)naTahu)
+            if (plocha[2, 0] + plocha[2, 1] + plocha[2, 2] == -3 )
                 return new StavHry(true, 10);
-            if (plocha[0, 0] + plocha[1, 0] + plocha[2, 0] == 3 * (int)naTahu)
+            if (plocha[0, 0] + plocha[1, 0] + plocha[2, 0] == -3 )
                 return new StavHry(true, 10);
-            if (plocha[0, 1] + plocha[1, 1] + plocha[2, 1] == 3 * (int)naTahu)
+            if (plocha[0, 1] + plocha[1, 1] + plocha[2, 1] == -3 )
                 return new StavHry(true, 10);
-            if (plocha[0, 2] + plocha[1, 2] + plocha[2, 2] == 3 * (int)naTahu)
+            if (plocha[0, 2] + plocha[1, 2] + plocha[2, 2] == -3 )
                 return new StavHry(true, 10);
-            if (plocha[0, 0] + plocha[1, 1] + plocha[2, 2] == 3 * (int)naTahu)
+            if (plocha[0, 0] + plocha[1, 1] + plocha[2, 2] == -3 )
                 return new StavHry(true, 10);
-            if (plocha[0, 2] + plocha[1, 1] + plocha[2, 0] == 3 * (int)naTahu)
+            if (plocha[0, 2] + plocha[1, 1] + plocha[2, 0] == -3 )
                 return new StavHry(true, 10);
 
-            if (plocha[0, 0] + plocha[0, 1] + plocha[0, 2] == -3 * (int)naTahu) //hrac na tahu prohral
+            if (plocha[0, 0] + plocha[0, 1] + plocha[0, 2] == 3) //hrac na tahu prohral
                 return new StavHry(true, -10);
-            if (plocha[1, 0] + plocha[1, 1] + plocha[1, 2] == -3 * (int)naTahu)
+            if (plocha[1, 0] + plocha[1, 1] + plocha[1, 2] == 3)
                 return new StavHry(true, -10);
-            if (plocha[2, 0] + plocha[2, 1] + plocha[2, 2] == -3 * (int)naTahu)
+            if (plocha[2, 0] + plocha[2, 1] + plocha[2, 2] == 3)
                 return new StavHry(true, -10);
-            if (plocha[0, 0] + plocha[1, 0] + plocha[2, 0] == -3 * (int)naTahu)
+            if (plocha[0, 0] + plocha[1, 0] + plocha[2, 0] == 3)
                 return new StavHry(true, -10);
-            if (plocha[0, 1] + plocha[1, 1] + plocha[2, 1] == -3 * (int)naTahu)
+            if (plocha[0, 1] + plocha[1, 1] + plocha[2, 1] == 3)
                 return new StavHry(true, -10);
-            if (plocha[0, 2] + plocha[1, 2] + plocha[2, 2] == -3 * (int)naTahu)
+            if (plocha[0, 2] + plocha[1, 2] + plocha[2, 2] == 3)
                 return new StavHry(true, -10);
-            if (plocha[0, 0] + plocha[1, 1] + plocha[2, 2] == -3 * (int)naTahu)
+            if (plocha[0, 0] + plocha[1, 1] + plocha[2, 2] == 3)
                 return new StavHry(true, -10);
-            if (plocha[0, 2] + plocha[1, 1] + plocha[2, 0] == -3 * (int)naTahu)
+            if (plocha[0, 2] + plocha[1, 1] + plocha[2, 0] == 3)
                 return new StavHry(true, -10);
 
             if (pocetVolnych == 0)
@@ -307,7 +307,7 @@ namespace Piskvorky
                 }
                 if (hloubka == 1)
                     Console.WriteLine("---------------");
-                return (maximum - hloubka) * minMax;
+                return (maximum + hloubka) * minMax;
             }
             else
             {
