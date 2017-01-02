@@ -166,6 +166,19 @@ namespace Piskvorky
                     //změní, kdo je na tahu
                     naTahu = NaTahu.pocitac;
 
+                    // změní barvu kolečka posledního tahu počítače
+                    if (vybranyTah != null)
+                    {
+                        Button tlacitkoNaPozici = grid_hraciPlocha.Children
+                            .OfType<Button>()
+                            .Cast<Button>()
+                            .First(btn => Grid.GetRow(btn) == vybranyTah.Radek && Grid.GetColumn(btn) == vybranyTah.Sloupec);
+
+                        Image i = new Image();
+                        i.Source = new BitmapImage(new Uri("kolecko.png", UriKind.Relative));
+                        tlacitkoNaPozici.Content = i;
+                    }
+
                     if (checkBox_vypnoutPocitac.IsChecked == false) // není zapnut testovací mód
                     {
                         //spustit MiniMax(1, 1) na pozadí a potom UmistitTah() a změnit, kdo je na tahu
@@ -212,6 +225,7 @@ namespace Piskvorky
             zahraneTahy = "";
             konecHry = false;
             label_ohodnoceni.Content = "";
+            vybranyTah = null;
 
             foreach (ContentControl b in grid_hraciPlocha.Children.OfType<ContentControl>())
             {
@@ -225,6 +239,8 @@ namespace Piskvorky
                 if (checkBox_vypnoutPocitac.IsChecked == false) // není zapnut testovací mód
                 {
                     UmistitTah(VELIKOST / 2, VELIKOST / 2); // první tah na střed
+
+                    vybranyTah = new Tah(VELIKOST / 2, VELIKOST / 2, 0);
 
                     progressBar_tahPocitace.Visibility = Visibility.Hidden;
                     label_tahPocitace.Visibility = Visibility.Hidden;
@@ -254,7 +270,7 @@ namespace Piskvorky
                 plocha[radek, sloupec] = -1;
 
                 Image i = new Image();
-                i.Source = new BitmapImage(new Uri("kolecko.png", UriKind.Relative));
+                i.Source = new BitmapImage(new Uri("kolecko_zelene.png", UriKind.Relative));
                 tlacitkoNaPozici.Content = i;
             }
             pocetVolnych--;
@@ -286,7 +302,7 @@ namespace Piskvorky
                 }
                 else // vyhrál hráč - tohle se nestane :D
                 {
-                    label_ohodnoceni.Content = "Vyhrál jsi?!";
+                    label_ohodnoceni.Content = "Vyhrál jsi!";
                     PosliDataNaServer();
                 }
 
