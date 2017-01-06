@@ -136,7 +136,8 @@ namespace Piskvorky
         // spustí se po dokončení úkolu na pozadí -> umístí tah počítače a změní, kdo je na tahu
         private void Pozadi_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            UmistitTah(vybranyTah.Radek, vybranyTah.Sloupec);
+            if(naTahu == NaTahu.pocitac)
+                UmistitTah(vybranyTah.Radek, vybranyTah.Sloupec);
 
             progressBar_tahPocitace.Visibility = Visibility.Hidden;
             label_tahPocitace.Visibility = Visibility.Hidden;
@@ -311,16 +312,20 @@ namespace Piskvorky
 
         void PosliDataNaServer()
         {
-            WebRequest request = WebRequest.Create("http://thetopfer.com/piskvorky/piskvorky.php?velikost=" + VELIKOST.ToString() + "&hloubka=" + MAXHLOUBKA.ToString() + "&vyhra=" + VYHRA.ToString() + "&tahy=" + zahraneTahy);
-            request.Method = "GET";
-            WebResponse response = request.GetResponse();
-            System.IO.Stream dataStream = response.GetResponseStream();
-            System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
-            string responseFromServer = reader.ReadToEnd();
-            Console.WriteLine(responseFromServer);
-            reader.Close();
-            dataStream.Close();
-            response.Close();
+            try
+            {
+                WebRequest request = WebRequest.Create("http://thetopfer.com/piskvorky/piskvorky.php?velikost=" + VELIKOST.ToString() + "&hloubka=" + MAXHLOUBKA.ToString() + "&vyhra=" + VYHRA.ToString() + "&tahy=" + zahraneTahy);
+                request.Method = "GET";
+                WebResponse response = request.GetResponse();
+                System.IO.Stream dataStream = response.GetResponseStream();
+                System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+                string responseFromServer = reader.ReadToEnd();
+                Console.WriteLine(responseFromServer);
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+            }
+            catch { }
         }
 
         /// <summary>
@@ -405,13 +410,23 @@ namespace Piskvorky
                         }
                         else if(volnyKonecDopredu && volnyKonecDozadu) // oba konce volné
                         {
-                            if(pocetVRade >= 2)
-                                hodnoceniPolicka += (int)Math.Pow(7, pocetVRade) * symbol * -1;
+                            if (pocetVRade >= 2)
+                            {
+                                if (symbol == 1) // hráč -> záporné ohodnocení
+                                    hodnoceniPolicka += (int)(Math.Pow(7, pocetVRade) * -1.1);
+                                else             // počítač -> kladné
+                                    hodnoceniPolicka += (int)(Math.Pow(7, pocetVRade));
+                            }
                         }
                         else // jeden volný konec
                         {
                             if (pocetVRade >= 2)
-                                hodnoceniPolicka += (int)Math.Pow(5, pocetVRade) * symbol * -1;
+                            {
+                                if (symbol == 1) // hráč -> záporné ohodnocení
+                                    hodnoceniPolicka += (int)(Math.Pow(5, pocetVRade) * -1.1);
+                                else             // počítač -> kladné
+                                    hodnoceniPolicka += (int)(Math.Pow(5, pocetVRade));
+                            }
                         }
                     }
 
